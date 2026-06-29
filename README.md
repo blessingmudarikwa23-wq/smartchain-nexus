@@ -12,21 +12,114 @@ An Enterprise Supply Chain Intelligence Platform integrating Supply Chain Manage
 </div>
 
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-
 ![Python](https://img.shields.io/badge/Python-3.12-yellow)
 
-![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green)
+![Java](https://img.shields.io/badge/Java-orange)
 
-![React](https://img.shields.io/badge/React-19-blue)
+![C](https://img.shields.io/badge/C-blue)
 
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![C++](https://img.shields.io/badge/C++-00599C)
+
+![C#](https://img.shields.io/badge/C%23-239120)
+
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E)
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6)
+
+![Go](https://img.shields.io/badge/Go-00ADD8)
+
+
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00)
+
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C)
+
+![Keras](https://img.shields.io/badge/Keras-D00000)
+
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E)
+
+![NumPy](https://img.shields.io/badge/NumPy-013243)
+
+![Pandas](https://img.shields.io/badge/Pandas-150458)
+
+![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C)
+
+![Seaborn](https://img.shields.io/badge/Seaborn-4CAF50)
+
+![Plotly](https://img.shields.io/badge/Plotly-3F4F75)
+
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626)
+
+![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8)
+
+![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21F)
+
+![MLflow](https://img.shields.io/badge/MLflow-0194E2)
+
+
+![FastAPI](https://img.shields.io/badge/FastAPI-009688)
+
+![Django](https://img.shields.io/badge/Django-092E20)
+
+![Flask](https://img.shields.io/badge/Flask-black)
+
+![Node.js](https://img.shields.io/badge/Node.js-339933)
+
+![Express.js](https://img.shields.io/badge/Express.js-black)
+
+![Next.js](https://img.shields.io/badge/Next.js-black)
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192)
+
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248)
+
+![GraphQL](https://img.shields.io/badge/GraphQL-E10098)
+
+![REST API](https://img.shields.io/badge/REST_API-005571)
+
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D)
+
+
+![React](https://img.shields.io/badge/React-19-61DAFB)
+
+![Vite](https://img.shields.io/badge/Vite-646CFF)
+
+![Redux](https://img.shields.io/badge/Redux-764ABC)
+
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4)
+
+![MUI](https://img.shields.io/badge/MUI-007FFF)
+
+![Chakra UI](https://img.shields.io/badge/Chakra_UI-319795)
+
+![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D)
+
+![Angular](https://img.shields.io/badge/Angular-DD0031)
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26)
+
+![CSS3](https://img.shields.io/badge/CSS3-1572B6)
+
+![SASS](https://img.shields.io/badge/SASS-CC6699)
+
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3)
+
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28)
+
+
+![Docker](https://img.shields.io/badge/Docker-Latest-blue)
+
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF)
+
+![AWS](https://img.shields.io/badge/AWS-232F3E)
+
+![Azure](https://img.shields.io/badge/Azure-0078D4)
+
+![Vercel](https://img.shields.io/badge/Vercel-black)
 
 ![Power BI](https://img.shields.io/badge/PowerBI-Latest-yellow)
 
-![Machine Learning](https://img.shields.io/badge/Machine-Learning-red)
 
-![Docker](https://img.shields.io/badge/Docker-Latest-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
 
 ![License](https://img.shields.io/badge/license-MIT-success)
 
