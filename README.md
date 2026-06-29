@@ -1,17 +1,3 @@
-# smartchain-nexus
-# SmartChain AI Enterprise Platform
-
-![SmartChain AI Enterprise Platform](images/my-project-flyer.png)
-
-An end-to-end Supply Chain Intelligence Platform integrating:
-
-- Procurement Intelligence
-- Warehouse Optimization
-- Inventory Analytics
-- Demand Forecasting
-- AI & Machine Learning
-- Lean Six Sigma Process Improvement
-- Real-time Business Intelligence Dashboards
 
 <div align="center">
 
