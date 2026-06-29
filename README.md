@@ -265,7 +265,7 @@ This project follows enterprise software engineering principles.
 - Data-driven decision making
 
 ---
-##Repository Structure
+ Repository Structure
 ---
 smartchain-nexus/
 │
@@ -343,7 +343,10 @@ smartchain-nexus/
 │   ├── icons/
 │   └── screenshots/
 │
-└── scripts/
+└── scripts/ 
+
+
+
 ```
 
 ---
