@@ -5,7 +5,12 @@ An Enterprise Supply Chain Intelligence Platform integrating Supply Chain Manage
 
 # SmartChain Nexus™
 
+### Enterprise Supply Chain Intelligence Platform
+
 ### Engineering Intelligent Supply Chains Through Data, AI & Continuous Improvement
+
+</div>
+
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Status](https://img.shields.io/badge/status-Planning-success.svg)
