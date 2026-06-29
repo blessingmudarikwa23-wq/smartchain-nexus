@@ -1,5 +1,5 @@
 # smartchain-nexus
-# 🚀 SmartChain AI Enterprise Platform
+# SmartChain AI Enterprise Platform
 
 ![SmartChain AI Enterprise Platform](images/my-project-flyer.png)
 
