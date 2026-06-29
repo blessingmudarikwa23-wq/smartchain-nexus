@@ -12,12 +12,23 @@ An Enterprise Supply Chain Intelligence Platform integrating Supply Chain Manage
 </div>
 
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Status](https://img.shields.io/badge/status-Planning-success.svg)
-![Python](https://img.shields.io/badge/Python-3.12-yellow.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Build](https://img.shields.io/badge/build-In%20Progress-orange.svg)
-![Made With Love](https://img.shields.io/badge/Made%20With-Python-red.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+
+![Python](https://img.shields.io/badge/Python-3.12-yellow)
+
+![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green)
+
+![React](https://img.shields.io/badge/React-19-blue)
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+
+![Power BI](https://img.shields.io/badge/PowerBI-Latest-yellow)
+
+![Machine Learning](https://img.shields.io/badge/Machine-Learning-red)
+
+![Docker](https://img.shields.io/badge/Docker-Latest-blue)
+
+![License](https://img.shields.io/badge/license-MIT-success)
 
 ---
 
