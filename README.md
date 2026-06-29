@@ -265,37 +265,85 @@ This project follows enterprise software engineering principles.
 - Data-driven decision making
 
 ---
-
-# Repository Structure
-
-```
+##Repository Structure
+---
 smartchain-nexus/
-
-README.md
-
-docs/
-
-backend/
-
-frontend/
-
-database/
-
-data/
-
-ml_models/
-
-powerbi/
-
-notebooks/
-
-reports/
-
-tests/
-
-assets/
-
-scripts/
+│
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── .gitignore
+├── requirements.txt
+├── docker-compose.yml
+├── .env.example
+│
+├── docs/
+│   ├── 01_Project_Charter.md
+│   ├── 02_Project_Vision.md
+│   ├── 03_Business_Case.md
+│   ├── 04_Stakeholder_Analysis.md
+│   ├── 05_Business_Requirements.md
+│   ├── 06_Functional_Requirements.md
+│   ├── 07_Non_Functional_Requirements.md
+│   ├── 08_System_Architecture.md
+│   ├── 09_Database_Design.md
+│   ├── 10_API_Design.md
+│   ├── 11_Testing_Strategy.md
+│   ├── 12_Deployment_Guide.md
+│   ├── 13_User_Guide.md
+│   └── 14_Project_Roadmap.md
+│
+├── backend/
+│   ├── app/
+│   ├── api/
+│   ├── core/
+│   ├── models/
+│   ├── services/
+│   ├── utils/
+│   └── tests/
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   ├── hooks/
+│   ├── services/
+│   └── styles/
+│
+├── database/
+│   ├── schema/
+│   ├── migrations/
+│   ├── seeds/
+│   └── scripts/
+│
+├── datasets/
+│
+├── notebooks/
+│
+├── machine_learning/
+│   ├── forecasting/
+│   ├── optimization/
+│   ├── supplier_risk/
+│   ├── anomaly_detection/
+│   └── recommendation_engine/
+│
+├── dashboards/
+│
+├── reports/
+│
+├── tests/
+│
+├── assets/
+│   ├── branding/
+│   ├── images/
+│   ├── icons/
+│   └── screenshots/
+│
+└── scripts/
 ```
 
 ---
