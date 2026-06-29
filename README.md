@@ -1,7 +1,7 @@
 # smartchain-nexus
 # 🚀 SmartChain AI Enterprise Platform
 
-![SmartChain AI Enterprise Platform](images/smartchain-ai-flyer.png)
+![SmartChain AI Enterprise Platform](images/my-project-flyer.png)
 
 An end-to-end Supply Chain Intelligence Platform integrating:
 
