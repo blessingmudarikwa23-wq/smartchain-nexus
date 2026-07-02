@@ -303,6 +303,7 @@ This project follows enterprise software engineering principles.
 - Data-driven decision making
 
 ---
+```
 
 # Repository Structure
 
@@ -333,7 +334,7 @@ smartchain-nexus/
 ```
 
 ---
-
+```
 # Project Status
 
 Current Version
@@ -349,6 +350,7 @@ Phase 0 — Foundation
 ```
 
 ---
+```
 
 # Project Roadmap
 
