@@ -44,6 +44,15 @@
 </div>
 
 ---
+---
+
+## 🌍 Overview
+
+SmartChain Nexus™ is a flagship enterprise portfolio project designed to demonstrate how modern technologies can transform end-to-end supply chain operations.
+
+The platform combines real-world business processes with advanced analytics, machine learning, business intelligence, and enterprise software engineering to solve operational challenges across procurement, inventory management, warehousing, logistics, supplier management, and executive decision-making.
+
+Rather than serving as a simple inventory management application, SmartChain Nexus is engineered as a comprehensive Supply Chain Intelligence Platform that mirrors the operational complexity of a multinational retail organization.
 
 # Executive Summary
 
