@@ -12,35 +12,28 @@
 **An Enterprise Digital Transformation Platform integrating Supply Chain Management, Artificial Intelligence, Machine Learning, Lean Six Sigma, Business Intelligence, and Enterprise Software Engineering.**
 
 </div>
-</div>
 
 <p align="center">
 
 ![Version](https://img.shields.io/badge/Version-v1.0.0-0052CC?style=for-the-badge)
-
 ![Status](https://img.shields.io/badge/Status-In_Development-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
-
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-
-![React](https://img.shields.io/badge/React-2025-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
-
 ![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
-
 ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
 
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
+![Enterprise](https://img.shields.io/badge/Enterprise-Ready-0A66C2?style=for-the-badge)
 
-![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
-
-</p>
+</div>
 ---
 
 ## Enterprise Supply Chain Intelligence Platform
