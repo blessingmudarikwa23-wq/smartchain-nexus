@@ -305,10 +305,9 @@ This project follows enterprise software engineering principles.
 ---
 ```
 
-# Repository Structure
+# 📂 Repository Structure
 
 ```text
-```
 smartchain-nexus/
 │
 ├── .github/                 # GitHub workflows and templates
@@ -331,7 +330,6 @@ smartchain-nexus/
 ├── CONTRIBUTING.md
 ├── requirements.txt
 └── docker-compose.yml
-```
 ```
 
 ---
