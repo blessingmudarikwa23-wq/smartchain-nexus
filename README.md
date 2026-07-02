@@ -303,9 +303,7 @@ This project follows enterprise software engineering principles.
 - Data-driven decision making
 
 ---
-```
-
-# 📂 Repository Structure
+# Repository Structure
 
 ```text
 smartchain-nexus/
@@ -330,6 +328,7 @@ smartchain-nexus/
 ├── CONTRIBUTING.md
 ├── requirements.txt
 └── docker-compose.yml
+```
 
 ---
 ```
