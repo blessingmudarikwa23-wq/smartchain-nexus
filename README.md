@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# 🚀 SmartChain Nexus™
+#  SmartChain Nexus™
 
 ## Enterprise Supply Chain Intelligence Platform
 
