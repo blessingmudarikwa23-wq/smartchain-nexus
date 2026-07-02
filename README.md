@@ -46,7 +46,7 @@
 ---
 ---
 
-## 🌍 Overview
+## Overview
 
 SmartChain Nexus™ is a flagship enterprise portfolio project designed to demonstrate how modern technologies can transform end-to-end supply chain operations.
 
