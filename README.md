@@ -1,12 +1,17 @@
 
 <div align="center">
 
-# SmartChain Nexus™
+# 🚀 SmartChain Nexus™
 
-### Enterprise Supply Chain Intelligence Platform
+## Enterprise Supply Chain Intelligence Platform
 
-### Engineering Intelligent Supply Chains Through Data, AI & Continuous Improvement
+### Engineering Intelligent Supply Chains Through Artificial Intelligence, Data Science & Continuous Improvement
 
+---
+
+**An Enterprise Digital Transformation Platform integrating Supply Chain Management, Artificial Intelligence, Machine Learning, Lean Six Sigma, Business Intelligence, and Enterprise Software Engineering.**
+
+</div>
 </div>
 
 <p align="center">
