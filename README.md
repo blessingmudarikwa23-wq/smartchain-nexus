@@ -54,6 +54,24 @@ The platform combines real-world business processes with advanced analytics, mac
 
 Rather than serving as a simple inventory management application, SmartChain Nexus is engineered as a comprehensive Supply Chain Intelligence Platform that mirrors the operational complexity of a multinational retail organization.
 
+---
+
+# 📑 Table of Contents
+
+- [Executive Summary](#-executive-summary)
+- [Business Problem](#-business-problem)
+- [Business Objectives](#-business-objectives)
+- [Platform Modules](#-platform-modules)
+- [Technology Stack](#-technology-stack)
+- [System Architecture](#-system-architecture)
+- [Repository Structure](#-repository-structure)
+- [Project Roadmap](#-project-roadmap)
+- [Future Enhancements](#-future-enhancements)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
 # Executive Summary
 
 SmartChain Nexus is an enterprise-grade digital transformation platform designed to simulate and optimize every aspect of a modern retail supply chain.
@@ -237,52 +255,39 @@ SmartChain Nexus provides data-driven answers to these questions.
 
 ---
 
-# Technology Stack
+# 🛠 Technology Stack
 
-## Programming
-
-- Python
-- SQL
-- JavaScript
-
-## Backend
-
-- FastAPI
-- Flask
-
-## Frontend
-
-- React
-- HTML5
-- CSS3
-
-## Database
-
-- PostgreSQL
-
-## Analytics
-
-- Pandas
-- NumPy
-- Scikit-learn
-- Plotly
-
-## Business Intelligence
-
-- Power BI
-
-## Version Control
-
-- Git
-- GitHub
-
-## Deployment
-
-- Docker
-- GitHub Actions
-
+| Category | Technologies |
+|------------|--------------|
+| Programming Languages | Python, SQL, JavaScript |
+| Backend | FastAPI |
+| Frontend | React.js |
+| Database | PostgreSQL |
+| Data Science | Pandas, NumPy, Scikit-learn |
+| Data Visualization | Plotly, Matplotlib |
+| Business Intelligence | Microsoft Power BI |
+| Machine Learning | Scikit-learn |
+| Version Control | Git, GitHub |
+| Containerization | Docker |
+| API Testing | Postman |
+| Documentation | Markdown |
+| Development Environment | Visual Studio Code |
+| Operating System | Windows / Linux |
 ---
+# Key Features
 
+- Intelligent Inventory Management
+- 🚚 Logistics & Distribution Analytics
+- 📊 Executive Business Intelligence Dashboards
+- 🤖 AI-Powered Decision Support
+- 📈 Demand Forecasting using Machine Learning
+- 🏭 Warehouse Performance Monitoring
+- 📑 Procurement & Supplier Management
+- ⚠️ Supply Chain Risk Assessment
+- 📉 Cost Optimization Analytics
+- 📍 Interactive KPI Dashboards
+- 📚 Lean Six Sigma Process Improvement
+- 🔍 Operational Performance Reporting
 # Development Principles
 
 This project follows enterprise software engineering principles.
