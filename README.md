@@ -289,7 +289,7 @@ SmartChain Nexus provides data-driven answers to these questions.
 - Lean Six Sigma Process Improvement
 - Operational Performance Reporting
 
-- 
+--- 
 # Development Principles
 
 This project follows enterprise software engineering principles.
@@ -365,6 +365,7 @@ Phase 0 — Foundation
 | Phase 8 — Deployment | ⏳ Pending |
 
 ---
+```
 
 # Author
 
