@@ -363,7 +363,6 @@ Phase 0 — Foundation
 | Phase 8 — Deployment | ⏳ Pending |
 
 ---
-```
 
 # Author
 
