@@ -56,7 +56,7 @@ Rather than serving as a simple inventory management application, SmartChain Nex
 
 ---
 
-# 📑 Table of Contents
+# Table of Contents
 
 - [Executive Summary](#-executive-summary)
 - [Business Problem](#-business-problem)
@@ -255,7 +255,7 @@ SmartChain Nexus provides data-driven answers to these questions.
 
 ---
 
-# 🛠 Technology Stack
+# Technology Stack
 
 | Category | Technologies |
 |------------|--------------|
@@ -277,17 +277,19 @@ SmartChain Nexus provides data-driven answers to these questions.
 # Key Features
 
 - Intelligent Inventory Management
-- 🚚 Logistics & Distribution Analytics
-- 📊 Executive Business Intelligence Dashboards
-- 🤖 AI-Powered Decision Support
-- 📈 Demand Forecasting using Machine Learning
-- 🏭 Warehouse Performance Monitoring
-- 📑 Procurement & Supplier Management
-- ⚠️ Supply Chain Risk Assessment
-- 📉 Cost Optimization Analytics
-- 📍 Interactive KPI Dashboards
-- 📚 Lean Six Sigma Process Improvement
-- 🔍 Operational Performance Reporting
+- Logistics & Distribution Analytics
+- Executive Business Intelligence Dashboards
+- AI-Powered Decision Support
+- Demand Forecasting using Machine Learning
+- Warehouse Performance Monitoring
+- Procurement & Supplier Management
+- Supply Chain Risk Assessment
+- Cost Optimization Analytics
+- Interactive KPI Dashboards
+- Lean Six Sigma Process Improvement
+- Operational Performance Reporting
+
+- 
 # Development Principles
 
 This project follows enterprise software engineering principles.
@@ -304,34 +306,30 @@ This project follows enterprise software engineering principles.
 
 # Repository Structure
 
-```
+```text
 smartchain-nexus/
-
-README.md
-
-docs/
-
-backend/
-
-frontend/
-
-database/
-
-data/
-
-ml_models/
-
-powerbi/
-
-notebooks/
-
-reports/
-
-tests/
-
-assets/
-
-scripts/
+│
+├── .github/                 # GitHub workflows and templates
+├── assets/                  # Branding assets, logos, images
+├── backend/                 # FastAPI backend
+├── dashboards/              # Power BI dashboards
+├── database/                # PostgreSQL scripts and schema
+├── datasets/                # Sample datasets
+├── docs/                    # Enterprise documentation
+├── frontend/                # React frontend
+├── machine_learning/        # ML models and training scripts
+├── notebooks/               # Jupyter notebooks
+├── reports/                 # Project reports
+├── scripts/                 # Utility scripts
+├── tests/                   # Automated tests
+│
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── requirements.txt
+└── docker-compose.yml
+```
 ```
 
 ---
@@ -352,20 +350,19 @@ Phase 0 — Foundation
 
 ---
 
-# Development Roadmap
+# Project Roadmap
 
-- ✅ Project Foundation
-- 🔄 Business Discovery
-- ⏳ Business Analysis
-- ⏳ Solution Architecture
-- ⏳ Database Design
-- ⏳ Backend Development
-- ⏳ Frontend Development
-- ⏳ Machine Learning
-- ⏳ Business Intelligence
-- ⏳ Lean Six Sigma
-- ⏳ Testing
-- ⏳ Deployment
+| Phase | Status |
+|--------|--------|
+| Phase 0 — Foundation | ✅ Completed |
+| Phase 1 — Business Analysis | 🔄 In Progress |
+| Phase 2 — Database Design | ⏳ Pending |
+| Phase 3 — Backend Development | ⏳ Pending |
+| Phase 4 — Frontend Development | ⏳ Pending |
+| Phase 5 — Machine Learning | ⏳ Pending |
+| Phase 6 — Business Intelligence | ⏳ Pending |
+| Phase 7 — Testing & QA | ⏳ Pending |
+| Phase 8 — Deployment | ⏳ Pending |
 
 ---
 
@@ -374,6 +371,20 @@ Phase 0 — Foundation
 **Blessing Mudarikwa**
 
 Supply Chain Management | Data Science | Lean Six Sigma | Business Intelligence | Software Engineering
+
+---
+# 🚀 Future Enhancements
+
+- Cloud Deployment (Azure / AWS)
+- Real-Time Inventory Monitoring
+- IoT Warehouse Integration
+- AI Supply Chain Assistant
+- Blockchain Supplier Traceability
+- Predictive Maintenance
+- Route Optimization Engine
+- Mobile Application
+- Role-Based Access Control
+- Enterprise Authentication
 
 ---
 
