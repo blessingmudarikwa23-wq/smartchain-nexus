@@ -305,26 +305,28 @@ This project follows enterprise software engineering principles.
 ---
 # Repository Structure
 
+```text
 smartchain-nexus/
 │
 ├── .github/                 # GitHub workflows and templates
-├── assets/                  # Branding assets, logos, images
-├── backend/                 # FastAPI backend
+├── assets/                  # Branding assets, logos and images
+├── backend/                 # FastAPI backend services
 ├── dashboards/              # Power BI dashboards
-├── database/                # PostgreSQL scripts and schema
-├── datasets/                # Sample datasets
+├── database/                # PostgreSQL schema and SQL scripts
+├── datasets/                # Raw and processed datasets
 ├── docs/                    # Enterprise documentation
-├── frontend/                # React frontend
+├── frontend/                # React application
 ├── machine_learning/        # ML models and training scripts
 ├── notebooks/               # Jupyter notebooks
 ├── reports/                 # Project reports
-├── scripts/                 # Utility scripts
-├── tests/                   # Automated tests
+├── scripts/                 # Utility and automation scripts
+├── tests/                   # Unit and integration tests
 │
-├── README.md
-├── LICENSE
+├── .gitignore
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
 ├── requirements.txt
 └── docker-compose.yml
 
