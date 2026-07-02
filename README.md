@@ -305,7 +305,6 @@ This project follows enterprise software engineering principles.
 ---
 # Repository Structure
 
-```
 smartchain-nexus/
 │
 ├── .github/                 # GitHub workflows and templates
@@ -328,15 +327,14 @@ smartchain-nexus/
 ├── CONTRIBUTING.md
 ├── requirements.txt
 └── docker-compose.yml
-```
 
 ---
-```
+
 # Project Status
 
 Current Version
 
-```
+---
 v1.0.0
 ---
 Current Phase
@@ -346,7 +344,7 @@ Phase 0 — Foundation
 
 
 ---
-```
+
 
 # Project Roadmap
 
