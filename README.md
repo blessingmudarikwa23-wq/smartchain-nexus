@@ -305,30 +305,79 @@ This project follows enterprise software engineering principles.
 ---
 # Repository Structure
 
+SmartChain Nexus™ follows an enterprise-grade modular architecture designed to support scalability, maintainability, and future expansion. Each directory has a clearly defined responsibility, reflecting industry best practices used in modern software engineering.
+
+---
+
+## Repository Overview
+
+| Directory / File | Description |
+|------------------|-------------|
+| 📁 `.github/` | GitHub Actions workflows, issue templates, pull request templates, and CI/CD automation. |
+| 📁 `assets/` | Logos, banners, icons, screenshots, branding assets, and design resources. |
+| 📁 `backend/` | FastAPI backend application containing APIs, business logic, authentication, and services. |
+| 📁 `frontend/` | React.js web application providing the user interface and user experience. |
+| 📁 `database/` | PostgreSQL database schema, SQL scripts, migrations, stored procedures, and seed data. |
+| 📁 `machine_learning/` | Machine learning models for forecasting, optimization, anomaly detection, and predictive analytics. |
+| 📁 `dashboards/` | Microsoft Power BI dashboards, KPI reports, executive scorecards, and business intelligence assets. |
+| 📁 `datasets/` | Raw, processed, and simulated enterprise datasets used throughout the project. |
+| 📁 `docs/` | Enterprise documentation including business analysis, architecture, project charter, and technical specifications. |
+| 📁 `notebooks/` | Jupyter notebooks used for experimentation, exploratory data analysis, and model development. |
+| 📁 `reports/` | Generated reports, project deliverables, presentations, and research findings. |
+| 📁 `scripts/` | Utility scripts, automation tools, ETL pipelines, and deployment scripts. |
+| 📁 `tests/` | Unit tests, integration tests, API testing, and quality assurance artifacts. |
+| 📄 `README.md` | Main project documentation and project overview. |
+| 📄 `LICENSE` | Project licensing information. |
+| 📄 `CHANGELOG.md` | Version history and release notes. |
+| 📄 `CONTRIBUTING.md` | Contribution guidelines for collaborators and open-source contributors. |
+| 📄 `requirements.txt` | Python project dependencies. |
+| 📄 `docker-compose.yml` | Multi-container Docker environment configuration. |
+
+---
+
+## Directory Tree
+
+```text
 smartchain-nexus/
 │
-├── .github/                 # GitHub workflows and templates
-├── assets/                  # Branding assets, logos and images
-├── backend/                 # FastAPI backend services
-├── dashboards/              # Power BI dashboards
-├── database/                # PostgreSQL schema and SQL scripts
-├── datasets/                # Raw and processed datasets
-├── docs/                    # Enterprise documentation
-├── frontend/                # React application
-├── machine_learning/        # ML models and training scripts
-├── notebooks/               # Jupyter notebooks
-├── reports/                 # Project reports
-├── scripts/                 # Utility and automation scripts
-├── tests/                   # Unit and integration tests
+├── .github/
+├── assets/
+├── backend/
+├── dashboards/
+├── database/
+├── datasets/
+├── docs/
+├── frontend/
+├── machine_learning/
+├── notebooks/
+├── reports/
+├── scripts/
+├── tests/
 │
-├── .gitignore
+├── README.md
+├── LICENSE
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
-├── LICENSE
-├── README.md
 ├── requirements.txt
 └── docker-compose.yml
+```
 
+---
+
+### Design Principles
+
+The repository has been designed around modern enterprise software engineering principles:
+
+- Modular architecture
+- Separation of concerns
+- Scalability
+- Maintainability
+- Clean code practices
+- Documentation-first development
+- Data-driven decision making
+- AI-first innovation
+- Continuous Improvement (Lean Six Sigma)
+- Cloud-ready deployment architecture
 ---
 
 # Project Status
@@ -366,7 +415,7 @@ Phase 0 — Foundation
 Supply Chain Management | Data Science | Lean Six Sigma | Business Intelligence | Software Engineering
 
 ---
-# 🚀 Future Enhancements
+# Future Enhancements
 
 - Cloud Deployment (Azure / AWS)
 - Real-Time Inventory Monitoring
