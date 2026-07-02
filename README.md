@@ -338,12 +338,12 @@ Current Version
 
 ```
 v1.0.0
-```
+---
 Current Phase
 
-```
+---
 Phase 0 — Foundation
-```
+
 
 ---
 ```
