@@ -308,6 +308,7 @@ This project follows enterprise software engineering principles.
 # Repository Structure
 
 ```text
+```
 smartchain-nexus/
 │
 ├── .github/                 # GitHub workflows and templates
@@ -342,13 +343,16 @@ Current Version
 ```
 v1.0.0
 ```
+```
 Current Phase
 
+```
 ```
 Phase 0 — Foundation
 ```
 
 ---
+```
 ```
 # Project Roadmap
 
