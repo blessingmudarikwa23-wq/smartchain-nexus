@@ -305,7 +305,7 @@ This project follows enterprise software engineering principles.
 ---
 # Repository Structure
 
-```text
+```
 smartchain-nexus/
 │
 ├── .github/                 # GitHub workflows and templates
