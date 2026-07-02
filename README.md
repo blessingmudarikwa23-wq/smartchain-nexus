@@ -330,7 +330,6 @@ smartchain-nexus/
 ├── CONTRIBUTING.md
 ├── requirements.txt
 └── docker-compose.yml
-```
 
 ---
 ```
