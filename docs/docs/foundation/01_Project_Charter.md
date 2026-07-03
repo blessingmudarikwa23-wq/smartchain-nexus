@@ -63,6 +63,7 @@ The project includes:
 - Hiring Managers
 - Supply Chain Professionals
 - Data Analysts
+- Lean Six Sigma Professionals
 - Software Engineers
 
 ---
