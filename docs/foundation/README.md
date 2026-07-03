@@ -1,3 +1,0 @@
-# Foundation
-
-Repository foundation documents.
