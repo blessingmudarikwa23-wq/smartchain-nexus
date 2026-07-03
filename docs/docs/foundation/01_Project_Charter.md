@@ -24,7 +24,7 @@ To build an intelligent, AI-powered supply chain analytics platform that enables
 - Forecast inventory demand using Machine Learning.
 - Provide executive dashboards with business KPIs.
 - Demonstrate enterprise software engineering best practices.
-- Showcase supply chain, data science, and software engineering skills in a single portfolio project.
+- Showcase supply chain, data science, lean six sigma, and software engineering skills in a single portfolio project.
 
 ---
 
