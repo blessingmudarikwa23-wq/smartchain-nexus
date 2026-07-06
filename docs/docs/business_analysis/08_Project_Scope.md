@@ -21,7 +21,7 @@ This document defines the boundaries of the SmartChain Nexus project by clearly 
 
 # Project Goal
 
-To design and develop an enterprise-grade intelligent Supply Chain Analytics Platform that integrates Supply Chain Management, Business Intelligence, Artificial Intelligence, and Software Engineering into one scalable solution.
+To design and develop an enterprise-grade intelligent Supply Chain Analytics Platform that integrates Supply Chain Management, Lean Six Sigma, Business Intelligence, Artificial Intelligence, and Software Engineering into one scalable solution.
 
 ---
 
