@@ -114,7 +114,7 @@ SmartChain Nexus will provide:
 
 # Conclusion
 
-SmartChain Nexus is a strategic platform that combines supply chain expertise with modern software engineering and analytics. It will serve as both a practical enterprise solution and a flagship portfolio project demonstrating expertise across Supply Chain Management, Business Analysis, Data Science, Machine Learning, and Full-Stack Software Engineering.
+SmartChain Nexus is a strategic platform that combines supply chain expertise with modern software engineering and analytics. It will serve as both a practical enterprise solution and a flagship portfolio project demonstrating expertise across Supply Chain Management, Business Analysis, Data Science, Lean Six Sigma, Machine Learning, and Full-Stack Software Engineering.
 
 ---
 
