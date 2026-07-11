@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Boolean, Column, Integer, String
 
 from backend.app.db.database import Base
 
@@ -17,5 +17,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
 
     password = Column(String, nullable=False)
+
+    role = Column(String, default="Staff")
 
     is_active = Column(Boolean, default=True)
