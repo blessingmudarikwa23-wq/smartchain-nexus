@@ -36,6 +36,9 @@ from backend.app.routers.sales_order import (
 from backend.app.routers.inventory_adjustment import (
     router as inventory_adjustment_router,
 )
+from backend.app.routers.dashboard import (
+    router as dashboard_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -64,7 +67,7 @@ app.include_router(purchase_order_router)
 app.include_router(customer_router)
 app.include_router(sales_order_router)
 app.include_router(inventory_adjustment_router)
-
+app.include_router(dashboard_router)
 
 # ===========================
 # Home Endpoint
