@@ -5,6 +5,9 @@ from backend.app.db.database import get_db
 from backend.app.models.purchase_order import PurchaseOrder
 from backend.app.models.product import Product
 from backend.app.models.supplier import Supplier
+from backend.app.models.inventory import Inventory
+from backend.app.models.inventory_transaction import InventoryTransaction
+
 from backend.app.schemas.purchase_order import (
     PurchaseOrderCreate,
     PurchaseOrderResponse,
@@ -88,3 +91,60 @@ def get_purchase_order(
         )
 
     return purchase_order
+
+
+# ==========================================
+# Receive Goods
+# ==========================================
+@router.post("/{purchase_order_id}/receive")
+def receive_purchase_order(
+    purchase_order_id: int,
+    db: Session = Depends(get_db)
+):
+
+    purchase_order = db.query(PurchaseOrder).filter(
+        PurchaseOrder.id == purchase_order_id
+    ).first()
+
+    if not purchase_order:
+        raise HTTPException(
+            status_code=404,
+            detail="Purchase Order not found."
+        )
+
+    if purchase_order.status == "Received":
+        raise HTTPException(
+            status_code=400,
+            detail="Purchase Order has already been received."
+        )
+
+    inventory = db.query(Inventory).filter(
+        Inventory.product_id == purchase_order.product_id
+    ).first()
+
+    if not inventory:
+        raise HTTPException(
+            status_code=404,
+            detail="Inventory record not found."
+        )
+
+    inventory.quantity += purchase_order.quantity
+
+    transaction = InventoryTransaction(
+        product_id=purchase_order.product_id,
+        transaction_type="STOCK_IN",
+        quantity=purchase_order.quantity,
+        reason=f"Purchase Order #{purchase_order.id} Received"
+    )
+
+    db.add(transaction)
+
+    purchase_order.status = "Received"
+
+    db.commit()
+
+    return {
+        "message": "Purchase Order received successfully.",
+        "purchase_order_id": purchase_order.id,
+        "inventory_quantity": inventory.quantity
+    }
