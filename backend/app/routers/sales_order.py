@@ -9,6 +9,7 @@ from backend.app.schemas.sales_order import (
     SalesOrderCreate,
     SalesOrderResponse,
 )
+from backend.app.services.inventory_service import reduce_inventory
 
 router = APIRouter(
     prefix="/sales-orders",
@@ -145,4 +146,57 @@ def delete_sales_order(
 
     return {
         "message": "Sales Order deleted successfully."
+    }
+
+
+# ==========================================
+# Dispatch Sales Order
+# ==========================================
+@router.post("/{sales_order_id}/dispatch")
+def dispatch_sales_order(
+    sales_order_id: int,
+    db: Session = Depends(get_db)
+):
+
+    sales_order = db.query(SalesOrder).filter(
+        SalesOrder.id == sales_order_id
+    ).first()
+
+    if not sales_order:
+        raise HTTPException(
+            status_code=404,
+            detail="Sales Order not found."
+        )
+
+    if sales_order.status == "Dispatched":
+        raise HTTPException(
+            status_code=400,
+            detail="Sales Order already dispatched."
+        )
+
+    product = db.query(Product).filter(
+        Product.id == sales_order.product_id
+    ).first()
+
+    if not product:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found."
+        )
+
+    reduce_inventory(
+        db=db,
+        product_id=sales_order.product_id,
+        quantity=sales_order.quantity,
+        reason=f"Sales Order #{sales_order.id}"
+    )
+
+    sales_order.status = "Dispatched"
+
+    db.commit()
+    db.refresh(sales_order)
+
+    return {
+        "message": "Sales Order dispatched successfully.",
+        "sales_order": sales_order
     }
