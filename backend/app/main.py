@@ -45,6 +45,9 @@ from backend.app.routers.low_stock import (
 from backend.app.routers.reorder import (
     router as reorder_router,
 )
+from backend.app.routers.sales_analytics import (
+    router as sales_analytics_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -76,6 +79,7 @@ app.include_router(inventory_adjustment_router)
 app.include_router(dashboard_router)
 app.include_router(low_stock_router)
 app.include_router(reorder_router)
+app.include_router(sales_analytics_router)
 
 # ===========================
 # Home Endpoint
