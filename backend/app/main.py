@@ -8,6 +8,7 @@ from backend.app.models.product import Product
 from backend.app.models.inventory import Inventory
 from backend.app.models.inventory_transaction import InventoryTransaction
 from backend.app.models.supplier import Supplier
+from backend.app.models.purchase_order import PurchaseOrder
 
 # Routers
 from backend.app.routers.user import router as user_router
@@ -18,6 +19,9 @@ from backend.app.routers.inventory_transaction import (
     router as inventory_transaction_router,
 )
 from backend.app.routers.supplier import router as supplier_router
+from backend.app.routers.purchase_order import (
+    router as purchase_order_router,
+)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -35,6 +39,7 @@ app.include_router(product_router)
 app.include_router(inventory_router)
 app.include_router(inventory_transaction_router)
 app.include_router(supplier_router)
+app.include_router(purchase_order_router)
 
 
 @app.get("/")
