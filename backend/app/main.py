@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from backend.app.db.database import Base, engine
 from backend.app.models.user import User
+from backend.app.models.product import Product
 from backend.app.routers.user import router as user_router
 
 # Create database tables
@@ -13,7 +14,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Register routers
 app.include_router(user_router)
 
 @app.get("/")
