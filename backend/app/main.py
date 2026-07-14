@@ -54,6 +54,12 @@ from backend.app.routers.top_products import (
 from backend.app.routers.supplier_performance import (
     router as supplier_performance_router,
 )
+from backend.app.routers.lead_time import (
+    router as lead_time_router,
+)
+from backend.app.routers.inventory_turnover import (
+    router as inventory_turnover_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -88,6 +94,8 @@ app.include_router(reorder_router)
 app.include_router(sales_analytics_router)
 app.include_router(top_products_router)
 app.include_router(supplier_performance_router)
+app.include_router(lead_time_router)
+app.include_router(inventory_turnover_router)
 
 # ===========================
 # Home Endpoint
