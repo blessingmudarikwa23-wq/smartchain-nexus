@@ -60,6 +60,9 @@ from backend.app.routers.lead_time import (
 from backend.app.routers.inventory_turnover import (
     router as inventory_turnover_router,
 )
+from backend.app.routers.abc_analysis import (
+    router as abc_analysis_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -96,6 +99,7 @@ app.include_router(top_products_router)
 app.include_router(supplier_performance_router)
 app.include_router(lead_time_router)
 app.include_router(inventory_turnover_router)
+app.include_router(abc_analysis_router)
 
 # ===========================
 # Home Endpoint
