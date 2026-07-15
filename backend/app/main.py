@@ -87,6 +87,9 @@ from backend.app.routers.slow_moving_inventory import (
 from backend.app.routers.dead_stock import (
     router as dead_stock_router,
 )
+from backend.app.routers.overstock_analysis import (
+    router as overstock_analysis_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -132,6 +135,7 @@ app.include_router(demand_forecasting_router)
 app.include_router(inventory_valuation_router)
 app.include_router(slow_moving_inventory_router)
 app.include_router(dead_stock_router)
+app.include_router(overstock_analysis_router)
 
 # ===========================
 # Home Endpoint
