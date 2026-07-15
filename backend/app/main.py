@@ -72,6 +72,9 @@ from backend.app.routers.eoq import (
 from backend.app.routers.safety_stock import (
     router as safety_stock_router,
 )
+from backend.app.routers.reorder_point import (
+    router as reorder_point_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -112,6 +115,7 @@ app.include_router(abc_analysis_router)
 app.include_router(xyz_analysis_router)
 app.include_router(eoq_router)
 app.include_router(safety_stock_router)
+app.include_router(reorder_point_router)
 
 # ===========================
 # Home Endpoint
