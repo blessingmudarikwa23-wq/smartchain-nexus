@@ -102,6 +102,9 @@ from backend.app.routers.sales_revenue_analysis import (
 from backend.app.routers.profit_margin_analysis import (
     router as profit_margin_analysis_router,
 )
+from backend.app.routers.supplier_purchase_trend import (
+    router as supplier_purchase_trend_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -152,6 +155,7 @@ app.include_router(supplier_spend_router)
 app.include_router(customer_purchase_analysis_router)
 app.include_router(sales_revenue_analysis_router)
 app.include_router(profit_margin_analysis_router)
+app.include_router(supplier_purchase_trend_router)
 
 # ===========================
 # Home Endpoint
