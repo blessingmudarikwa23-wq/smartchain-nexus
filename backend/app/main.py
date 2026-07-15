@@ -69,6 +69,9 @@ from backend.app.routers.xyz_analysis import (
 from backend.app.routers.eoq import (
     router as eoq_router,
 )
+from backend.app.routers.safety_stock import (
+    router as safety_stock_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -108,6 +111,7 @@ app.include_router(inventory_turnover_router)
 app.include_router(abc_analysis_router)
 app.include_router(xyz_analysis_router)
 app.include_router(eoq_router)
+app.include_router(safety_stock_router)
 
 # ===========================
 # Home Endpoint
