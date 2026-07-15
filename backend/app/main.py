@@ -111,6 +111,9 @@ from backend.app.routers.inventory_aging_analysis import (
 from backend.app.routers.warehouse_utilization import (
     router as warehouse_utilization_router,
 )
+from backend.app.routers.stock_movement_trend import (
+    router as stock_movement_trend_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -164,6 +167,7 @@ app.include_router(profit_margin_analysis_router)
 app.include_router(supplier_purchase_trend_router)
 app.include_router(inventory_aging_analysis_router)
 app.include_router(warehouse_utilization_router)
+app.include_router(stock_movement_trend_router)
 
 # ===========================
 # Home Endpoint
