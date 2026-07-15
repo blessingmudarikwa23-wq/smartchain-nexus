@@ -75,6 +75,9 @@ from backend.app.routers.safety_stock import (
 from backend.app.routers.reorder_point import (
     router as reorder_point_router,
 )
+from backend.app.routers.demand_forecasting import (
+    router as demand_forecasting_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -116,6 +119,7 @@ app.include_router(xyz_analysis_router)
 app.include_router(eoq_router)
 app.include_router(safety_stock_router)
 app.include_router(reorder_point_router)
+app.include_router(demand_forecasting_router)
 
 # ===========================
 # Home Endpoint
