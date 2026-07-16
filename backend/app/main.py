@@ -1,4 +1,12 @@
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
+from sqlalchemy.exc import SQLAlchemyError
+
+from backend.app.core.exceptions import (
+    validation_exception_handler,
+    sqlalchemy_exception_handler,
+    generic_exception_handler,
+)
 
 from backend.app.db.database import Base, engine
 
@@ -83,6 +91,24 @@ app = FastAPI(
     title="SmartChain Nexus API",
     description="AI-Powered Enterprise Supply Chain Management Platform",
     version="1.0.0",
+)
+
+# ===========================
+# Global Exception Handlers
+# ===========================
+app.add_exception_handler(
+    RequestValidationError,
+    validation_exception_handler,
+)
+
+app.add_exception_handler(
+    SQLAlchemyError,
+    sqlalchemy_exception_handler,
+)
+
+app.add_exception_handler(
+    Exception,
+    generic_exception_handler,
 )
 
 # ===========================
