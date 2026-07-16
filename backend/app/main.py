@@ -67,6 +67,9 @@ from backend.app.routers.stockout_frequency_analysis import (
 from backend.app.routers.executive_kpi_summary import (
     router as executive_kpi_summary_router,
 )
+from backend.app.routers.ai_insights import (
+    router as ai_insights_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -128,6 +131,7 @@ app.include_router(inventory_days_on_hand_router)
 app.include_router(supplier_delivery_reliability_router)
 app.include_router(stockout_frequency_analysis_router)
 app.include_router(executive_kpi_summary_router)
+app.include_router(ai_insights_router)
 
 # ===========================
 # Home Endpoint
