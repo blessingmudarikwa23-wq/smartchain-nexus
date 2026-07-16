@@ -61,6 +61,9 @@ from backend.app.routers.inventory_days_on_hand import router as inventory_days_
 from backend.app.routers.supplier_delivery_reliability import (
     router as supplier_delivery_reliability_router,
 )
+from backend.app.routers.stockout_frequency_analysis import (
+    router as stockout_frequency_analysis_router,
+)
 
 # ===========================
 # Create Database Tables
@@ -120,6 +123,7 @@ app.include_router(procurement_cost_analysis_router)
 app.include_router(order_fulfillment_analysis_router)
 app.include_router(inventory_days_on_hand_router)
 app.include_router(supplier_delivery_reliability_router)
+app.include_router(stockout_frequency_analysis_router)
 
 # ===========================
 # Home Endpoint
