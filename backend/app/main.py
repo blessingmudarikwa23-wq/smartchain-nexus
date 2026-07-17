@@ -68,6 +68,7 @@ from backend.app.routers.supplier_purchase_trend import router as supplier_purch
 from backend.app.routers.inventory_aging_analysis import router as inventory_aging_analysis_router
 from backend.app.routers.warehouse_utilization import router as warehouse_utilization_router
 from backend.app.routers.stock_movement_trend import router as stock_movement_trend_router
+from backend.app.core.settings import settings
 from backend.app.routers.procurement_cost_analysis import router as procurement_cost_analysis_router
 from backend.app.routers.order_fulfillment_analysis import router as order_fulfillment_analysis_router
 from backend.app.routers.inventory_days_on_hand import router as inventory_days_on_hand_router
@@ -93,9 +94,9 @@ Base.metadata.create_all(bind=engine)
 # FastAPI Application
 # ===========================
 app = FastAPI(
-    title="SmartChain Nexus API",
+    title=settings.APP_NAME,
     description="AI-Powered Enterprise Supply Chain Management Platform",
-    version="1.0.0",
+    version=settings.APP_VERSION,
 )
 configure_cors(app)
 
