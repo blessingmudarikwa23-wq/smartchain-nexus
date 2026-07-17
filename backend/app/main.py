@@ -2,12 +2,14 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
 
+from backend.app.core.middleware import RequestLoggingMiddleware
+from backend.app.core.logging import logger
+
 from backend.app.core.exceptions import (
     validation_exception_handler,
     sqlalchemy_exception_handler,
     generic_exception_handler,
 )
-from backend.app.core.logging import logger
 
 from backend.app.db.database import Base, engine
 
@@ -93,6 +95,8 @@ app = FastAPI(
     description="AI-Powered Enterprise Supply Chain Management Platform",
     version="1.0.0",
 )
+
+app.add_middleware(RequestLoggingMiddleware)
 
 logger.info("SmartChain Nexus API started successfully.")
 
