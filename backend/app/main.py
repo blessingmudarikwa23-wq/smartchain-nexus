@@ -31,6 +31,7 @@ from backend.app.models.inventory_adjustment import InventoryAdjustment
 # ===========================
 from backend.app.routers.user import router as user_router
 from backend.app.routers.auth import router as auth_router
+from backend.app.routers import health
 from backend.app.routers.product import router as product_router
 from backend.app.routers.inventory import router as inventory_router
 from backend.app.routers.inventory_transaction import router as inventory_transaction_router
@@ -123,6 +124,7 @@ app.add_exception_handler(
 # ===========================
 app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(health.router)
 app.include_router(product_router)
 app.include_router(inventory_router)
 app.include_router(inventory_transaction_router)
