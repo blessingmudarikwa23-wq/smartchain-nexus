@@ -33,6 +33,7 @@ from backend.app.routers.user import router as user_router
 from backend.app.routers.auth import router as auth_router
 from backend.app.routers import health
 from backend.app.core.cors import configure_cors
+from backend.app.core.security_headers import SecurityHeadersMiddleware
 from backend.app.routers.product import router as product_router
 from backend.app.routers.inventory import router as inventory_router
 from backend.app.routers.inventory_transaction import router as inventory_transaction_router
@@ -100,6 +101,7 @@ app = FastAPI(
 )
 configure_cors(app)
 
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestLoggingMiddleware)
 
 logger.info("SmartChain Nexus API started successfully.")
