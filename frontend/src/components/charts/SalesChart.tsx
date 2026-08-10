@@ -3,22 +3,23 @@ import {
   Bar,
   XAxis,
   YAxis,
- CartesianGrid,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   Legend,
 } from "recharts";
 
-const data = [
-  { month: "Jan", Sales: 35, Purchase: 28 },
-  { month: "Feb", Sales: 42, Purchase: 32 },
-  { month: "Mar", Sales: 38, Purchase: 30 },
-  { month: "Apr", Sales: 50, Purchase: 40 },
-  { month: "May", Sales: 46, Purchase: 36 },
-  { month: "Jun", Sales: 58, Purchase: 45 },
-];
+type SalesChartData = {
+  month: string;
+  sales: number;
+  purchase: number;
+};
 
-export default function SalesChart() {
+type SalesChartProps = {
+  data: SalesChartData[];
+};
+
+export default function SalesChart({ data }: SalesChartProps) {
   return (
     <div
       style={{
@@ -51,14 +52,16 @@ export default function SalesChart() {
           <Legend />
 
           <Bar
-            dataKey="Sales"
-            fill="#2563EB"
+            dataKey="purchase"
+            name="Purchase"
+            fill="#10B981"
             radius={[6, 6, 0, 0]}
           />
 
           <Bar
-            dataKey="Purchase"
-            fill="#10B981"
+            dataKey="sales"
+            name="Sales"
+            fill="#2563EB"
             radius={[6, 6, 0, 0]}
           />
         </BarChart>

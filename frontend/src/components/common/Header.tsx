@@ -1,6 +1,18 @@
+import { useState } from "react";
 import { theme } from "../../styles/theme";
 
 export default function Header() {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  function handleSearch() {
+    if (!searchTerm.trim()) {
+      return;
+    }
+
+    console.log("Searching for:", searchTerm);
+  }
+
   return (
     <header
       style={{
@@ -11,6 +23,7 @@ export default function Header() {
         justifyContent: "space-between",
         alignItems: "center",
         boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+        position: "relative",
       }}
     >
       <div>
@@ -40,15 +53,57 @@ export default function Header() {
           gap: "25px",
         }}
       >
+        {/* SEARCH */}
+
         <div
           style={{
-            padding: "10px 16px",
-            background: "#F1F5F9",
-            borderRadius: 12,
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}
         >
-          🔍 Search
+          {searchOpen && (
+            <input
+              autoFocus
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+              placeholder="Search..."
+              style={{
+                width: "220px",
+                padding: "10px 14px",
+                border: `1px solid ${theme.border}`,
+                borderRadius: "10px",
+                outline: "none",
+                fontSize: "14px",
+                background: "#ffffff",
+              }}
+            />
+          )}
+
+          <button
+            type="button"
+            onClick={() => setSearchOpen(!searchOpen)}
+            style={{
+              padding: "10px 16px",
+              background: "#F1F5F9",
+              border: "none",
+              borderRadius: 12,
+              cursor: "pointer",
+              fontSize: "14px",
+              color: theme.text,
+            }}
+          >
+            🔍 Search
+          </button>
         </div>
+
+        {/* NOTIFICATIONS */}
 
         <div
           style={{
@@ -58,6 +113,8 @@ export default function Header() {
         >
           🔔
         </div>
+
+        {/* USER */}
 
         <div
           style={{

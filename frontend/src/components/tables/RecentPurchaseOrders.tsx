@@ -4,80 +4,160 @@ type PurchaseOrder = {
   status: string;
 };
 
-const orders: PurchaseOrder[] = [
-  {
-    supplier: "Dell Technologies",
-    reference: "PO-1001",
-    status: "Pending",
-  },
-  {
-    supplier: "HP South Africa",
-    reference: "PO-1002",
-    status: "Approved",
-  },
-  {
-    supplier: "Lenovo",
-    reference: "PO-1003",
-    status: "Delivered",
-  },
-];
+type RecentPurchaseOrdersProps = {
+  data: PurchaseOrder[];
+};
 
-export default function RecentPurchaseOrders() {
+export default function RecentPurchaseOrders({
+  data,
+}: RecentPurchaseOrdersProps) {
   return (
     <div
       style={{
         background: "#ffffff",
-        padding: "24px",
-        borderRadius: "16px",
-        boxShadow: "0 10px 25px rgba(0,0,0,.08)",
-        border: "1px solid #e5e7eb",
+        borderRadius: "20px",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 12px 30px rgba(15, 23, 42, 0.06)",
+        overflow: "hidden",
       }}
     >
-      <h3 style={{ marginBottom: "20px" }}>
-        📋 Recent Purchase Orders
-      </h3>
-
-      <table
+      <div
         style={{
-          width: "100%",
-          borderCollapse: "collapse",
+          padding: "22px 24px",
+          borderBottom: "1px solid #eef2f7",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <thead>
-          <tr>
-            <th align="left">Supplier</th>
-            <th align="left">Reference</th>
-            <th align="right">Status</th>
-          </tr>
-        </thead>
+        <div>
+          <div
+            style={{
+              fontSize: "12px",
+              fontWeight: "800",
+              color: "#64748b",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              marginBottom: "5px",
+            }}
+          >
+            Procurement
+          </div>
 
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.reference}>
-              <td style={{ padding: "12px 0" }}>
-                {order.supplier}
-              </td>
+          <h3
+            style={{
+              margin: 0,
+              fontSize: "20px",
+              fontWeight: "800",
+              color: "#0f172a",
+            }}
+          >
+            📋 Purchase Orders
+          </h3>
+        </div>
 
-              <td>{order.reference}</td>
+        <div
+          style={{
+            width: "38px",
+            height: "38px",
+            borderRadius: "12px",
+            background: "#eff6ff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "18px",
+          }}
+        >
+          📦
+        </div>
+      </div>
 
-              <td
-                align="right"
+      <div style={{ padding: "8px 24px 18px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.5fr 1fr auto",
+            gap: "16px",
+            padding: "12px 0",
+            borderBottom: "1px solid #e2e8f0",
+            color: "#94a3b8",
+            fontSize: "11px",
+            fontWeight: "800",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+          }}
+        >
+          <span>Supplier</span>
+          <span>Reference</span>
+          <span style={{ textAlign: "right" }}>Status</span>
+        </div>
+
+        {data.map((order) => {
+          const statusStyle =
+            order.status === "Delivered"
+              ? {
+                  background: "#ecfdf5",
+                  color: "#059669",
+                }
+              : order.status === "Approved"
+              ? {
+                  background: "#eff6ff",
+                  color: "#2563eb",
+                }
+              : {
+                  background: "#fffbeb",
+                  color: "#d97706",
+                };
+
+          return (
+            <div
+              key={order.reference}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.5fr 1fr auto",
+                gap: "16px",
+                alignItems: "center",
+                padding: "16px 0",
+                borderBottom: "1px solid #f1f5f9",
+              }}
+            >
+              <div
                 style={{
-                  fontWeight: "bold",
-                  color:
-                    order.status === "Delivered"
-                      ? "#10b981"
-                      : order.status === "Approved"
-                      ? "#2563eb"
-                      : "#f59e0b",
+                  fontSize: "14px",
+                  fontWeight: "700",
+                  color: "#334155",
+                }}
+              >
+                {order.supplier}
+              </div>
+
+              <div
+                style={{
+                  fontSize: "13px",
+                  color: "#64748b",
+                  fontWeight: "600",
+                }}
+              >
+                {order.reference}
+              </div>
+
+              <div
+                style={{
+                  ...statusStyle,
+                  padding: "6px 10px",
+                  borderRadius: "999px",
+                  fontSize: "11px",
+                  fontWeight: "800",
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {order.status}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

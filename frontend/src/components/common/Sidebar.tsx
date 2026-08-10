@@ -40,8 +40,9 @@ export default function Sidebar() {
 
   return (
     <aside
-      style={{
-        width: 360,
+  style={{
+    width: 280,
+    flexShrink: 0,
         background: "#0F172A",
         color: "#ffffff",
         minHeight: "100vh",

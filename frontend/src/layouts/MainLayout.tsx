@@ -8,6 +8,8 @@ export default function MainLayout() {
       style={{
         display: "flex",
         minHeight: "100vh",
+        width: "100%",
+        background: "#f8fafc",
       }}
     >
       <Sidebar />
@@ -15,6 +17,7 @@ export default function MainLayout() {
       <main
         style={{
           flex: 1,
+          minWidth: 0,
           background: "#f8fafc",
         }}
       >
@@ -22,7 +25,9 @@ export default function MainLayout() {
 
         <div
           style={{
-            padding: "30px",
+            width: "100%",
+            padding: "28px 32px 40px 32px",
+            boxSizing: "border-box",
           }}
         >
           <Outlet />

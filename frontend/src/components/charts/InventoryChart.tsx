@@ -8,16 +8,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { month: "Jan", inventory: 420 },
-  { month: "Feb", inventory: 510 },
-  { month: "Mar", inventory: 470 },
-  { month: "Apr", inventory: 630 },
-  { month: "May", inventory: 590 },
-  { month: "Jun", inventory: 710 },
-];
+type InventoryChartData = {
+  month: string;
+  inventory: number;
+};
 
-export default function InventoryChart() {
+type InventoryChartProps = {
+  data: InventoryChartData[];
+};
+
+export default function InventoryChart({
+  data,
+}: InventoryChartProps) {
   return (
     <div
       style={{
