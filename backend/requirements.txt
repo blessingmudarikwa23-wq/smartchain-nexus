@@ -8,3 +8,4 @@ python-jose
 passlib[bcrypt]
 bcrypt
 psycopg2-binary
+email-validator
