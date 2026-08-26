@@ -42,14 +42,18 @@ default_origins = (
     "http://127.0.0.1:5175"
 )
 
-# Render production environment variable.
-#
-# Example:
-# FRONTEND_URLS=https://smartchain-nexus-frontend.onrender.com
-#
-# Multiple frontend URLs can be separated by commas.
-frontend_urls = os.getenv("FRONTEND_URLS", default_origins)
+# Production frontend URL
+production_frontend_url = (
+    "https://smartchain-nexus-frontend.onrender.com"
+)
 
+# Read additional frontend URLs from environment variables if provided
+frontend_urls = os.getenv(
+    "FRONTEND_URLS",
+    f"{default_origins},{production_frontend_url}",
+)
+
+# Convert comma-separated URLs into a clean list
 allow_origins = [
     origin.strip().rstrip("/")
     for origin in frontend_urls.split(",")
@@ -86,15 +90,6 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allow_origins,
-
-    # Allows Render and Vercel deployments.
-    #
-    # Examples:
-    # https://smartchain-nexus-frontend.onrender.com
-    # https://smartchain-nexus-xyz.vercel.app
-    #
-    allow_origin_regex=r"^https://.*\.(vercel\.app|onrender\.com)$",
-
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
