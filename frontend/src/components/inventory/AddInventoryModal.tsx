@@ -2,11 +2,15 @@ import { useState } from "react";
 import { inventoryService } from "../../services/inventoryService";
 
 type InventoryData = {
-  product_id: number;
+  sku: string;
+  item_name: string;
+  category: string;
   warehouse: string;
-  quantity_in_stock: number;
+  quantity: number;
+  unit: string;
+  unit_cost: number;
   minimum_stock: number;
-  reorder_level: number;
+  maximum_stock: number;
 };
 
 type Props = {
@@ -15,64 +19,112 @@ type Props = {
   onSaved?: () => void;
 };
 
+const initialForm: InventoryData = {
+  sku: "",
+  item_name: "",
+  category: "",
+  warehouse: "",
+  quantity: 0,
+  unit: "Units",
+  unit_cost: 0,
+  minimum_stock: 10,
+  maximum_stock: 100,
+};
+
 export default function AddInventoryModal({
   open,
   onClose,
   onSaved,
 }: Props) {
-  const [form, setForm] = useState<InventoryData>({
-    product_id: 0,
-    warehouse: "",
-    quantity_in_stock: 0,
-    minimum_stock: 10,
-    reorder_level: 20,
-  });
+  const [form, setForm] = useState<InventoryData>(initialForm);
+  const [saving, setSaving] = useState(false);
 
-  if (!open) return null;
+  if (!open) {
+    return null;
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
 
-    setForm((prev) => ({
-      ...prev,
+    setForm((previous) => ({
+      ...previous,
       [name]:
-        name === "warehouse"
+        name === "sku" ||
+        name === "item_name" ||
+        name === "category" ||
+        name === "warehouse" ||
+        name === "unit"
           ? value
           : Number(value),
     }));
   };
 
-  async function handleSave() {
-    try {
-      await inventoryService.createInventory(form);
+  const handleSave = async () => {
+    if (saving) {
+      return;
+    }
 
-      setForm({
-        product_id: 0,
-        warehouse: "",
-        quantity_in_stock: 0,
-        minimum_stock: 10,
-        reorder_level: 20,
-      });
+    try {
+      setSaving(true);
+
+      console.log("Submitting inventory:", form);
+
+      const response = await inventoryService.createInventory(form);
+
+      console.log(
+        "Inventory created successfully:",
+        response.data
+      );
+
+      setForm(initialForm);
 
       onSaved?.();
-
       onClose();
 
       alert("Inventory added successfully!");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to add inventory.");
+    } catch (error: any) {
+      console.error("Failed to add inventory:", error);
+
+      console.error(
+        "Status:",
+        error?.response?.status
+      );
+
+      console.error(
+        "Response:",
+        error?.response?.data
+      );
+
+      console.error(
+        "Request:",
+        error?.config?.data
+      );
+
+      const detail =
+        error?.response?.data?.detail ||
+        error?.response?.data?.message ||
+        "Unable to add inventory.";
+
+      alert(
+        `Failed to add inventory: ${
+          typeof detail === "string"
+            ? detail
+            : JSON.stringify(detail)
+        }`
+      );
+    } finally {
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <div
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,.45)",
+        background: "rgba(0, 0, 0, 0.45)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -82,19 +134,36 @@ export default function AddInventoryModal({
       <div
         style={{
           width: "520px",
+          maxHeight: "90vh",
+          overflowY: "auto",
           background: "#ffffff",
           borderRadius: "16px",
           padding: "30px",
-          boxShadow: "0 20px 50px rgba(0,0,0,.25)",
+          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.25)",
         }}
       >
         <h2>📦 Add Inventory</h2>
 
         <input
-          name="product_id"
-          type="number"
-          placeholder="Product ID"
-          value={form.product_id}
+          name="sku"
+          placeholder="SKU"
+          value={form.sku}
+          onChange={handleChange}
+          style={input}
+        />
+
+        <input
+          name="item_name"
+          placeholder="Item Name"
+          value={form.item_name}
+          onChange={handleChange}
+          style={input}
+        />
+
+        <input
+          name="category"
+          placeholder="Category"
+          value={form.category}
           onChange={handleChange}
           style={input}
         />
@@ -108,10 +177,27 @@ export default function AddInventoryModal({
         />
 
         <input
-          name="quantity_in_stock"
+          name="quantity"
           type="number"
-          placeholder="Current Stock"
-          value={form.quantity_in_stock}
+          placeholder="Quantity"
+          value={form.quantity}
+          onChange={handleChange}
+          style={input}
+        />
+
+        <input
+          name="unit"
+          placeholder="Unit"
+          value={form.unit}
+          onChange={handleChange}
+          style={input}
+        />
+
+        <input
+          name="unit_cost"
+          type="number"
+          placeholder="Unit Cost (R)"
+          value={form.unit_cost}
           onChange={handleChange}
           style={input}
         />
@@ -126,10 +212,10 @@ export default function AddInventoryModal({
         />
 
         <input
-          name="reorder_level"
+          name="maximum_stock"
           type="number"
-          placeholder="Reorder Level"
-          value={form.reorder_level}
+          placeholder="Maximum Stock"
+          value={form.maximum_stock}
           onChange={handleChange}
           style={input}
         />
@@ -143,17 +229,21 @@ export default function AddInventoryModal({
           }}
         >
           <button
+            type="button"
             onClick={onClose}
+            disabled={saving}
             style={cancelButton}
           >
             Cancel
           </button>
 
           <button
+            type="button"
             onClick={handleSave}
+            disabled={saving}
             style={saveButton}
           >
-            Save Inventory
+            {saving ? "Saving..." : "Save Inventory"}
           </button>
         </div>
       </div>

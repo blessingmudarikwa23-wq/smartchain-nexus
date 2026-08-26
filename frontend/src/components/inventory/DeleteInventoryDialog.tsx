@@ -1,17 +1,17 @@
-import type { Inventory } from "../../services/inventoryService";
-
 type Props = {
   open: boolean;
-  inventory: Inventory | null;
+  inventoryId: number | null;
   onClose: () => void;
+  onConfirm: () => void;
 };
 
 export default function DeleteInventoryDialog({
   open,
-  inventory,
+  inventoryId,
   onClose,
+  onConfirm,
 }: Props) {
-  if (!open || !inventory) return null;
+  if (!open || inventoryId === null) return null;
 
   return (
     <div
@@ -47,10 +47,11 @@ export default function DeleteInventoryDialog({
           style={{
             marginBottom: "30px",
             fontSize: "16px",
+            color: "#374151",
           }}
         >
-          Are you sure you want to delete the inventory record for
-          <strong> Product #{inventory.product_id}</strong>?
+          Are you sure you want to delete inventory record{" "}
+          <strong>#{inventoryId}</strong>?
         </p>
 
         <div
@@ -75,6 +76,7 @@ export default function DeleteInventoryDialog({
           </button>
 
           <button
+            onClick={onConfirm}
             style={{
               background: "#DC2626",
               color: "#ffffff",

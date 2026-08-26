@@ -1,6 +1,6 @@
 import type { SalesOrder } from "../../services/salesOrderService";
 
-type SalesOrderTableProps = {
+type Props = {
   orders: SalesOrder[];
   onEdit: (order: SalesOrder) => void;
   onDelete: (order: SalesOrder) => void;
@@ -10,19 +10,82 @@ export default function SalesOrderTable({
   orders,
   onEdit,
   onDelete,
-}: SalesOrderTableProps) {
+}: Props) {
+  const getOrderStatusStyle = (
+    status: string
+  ): React.CSSProperties => {
+    const value = status.toLowerCase();
+
+    if (value === "completed") {
+      return {
+        background: "#DCFCE7",
+        color: "#166534",
+      };
+    }
+
+    if (value === "processing") {
+      return {
+        background: "#DBEAFE",
+        color: "#1D4ED8",
+      };
+    }
+
+    if (value === "cancelled") {
+      return {
+        background: "#FEE2E2",
+        color: "#991B1B",
+      };
+    }
+
+    return {
+      background: "#FEF3C7",
+      color: "#92400E",
+    };
+  };
+
+  const getPaymentStatusStyle = (
+    status: string
+  ): React.CSSProperties => {
+    const value = status.toLowerCase();
+
+    if (value === "paid") {
+      return {
+        background: "#DCFCE7",
+        color: "#166534",
+      };
+    }
+
+    if (value === "failed") {
+      return {
+        background: "#FEE2E2",
+        color: "#991B1B",
+      };
+    }
+
+    return {
+      background: "#FEF3C7",
+      color: "#92400E",
+    };
+  };
+
   return (
     <div
       style={{
-        background: "#ffffff",
+        background: "#FFFFFF",
         borderRadius: "16px",
         padding: "24px",
         boxShadow: "0 10px 25px rgba(0,0,0,.08)",
-        border: "1px solid #e5e7eb",
+        border: "1px solid #E5E7EB",
         overflowX: "auto",
       }}
     >
-      <h3 style={{ marginBottom: "20px" }}>
+      <h3
+        style={{
+          marginTop: 0,
+          marginBottom: "20px",
+          color: "#0F172A",
+        }}
+      >
         Sales Orders
       </h3>
 
@@ -30,15 +93,25 @@ export default function SalesOrderTable({
         style={{
           width: "100%",
           borderCollapse: "collapse",
+          minWidth: "1100px",
         }}
       >
         <thead>
-          <tr style={{ background: "#f8fafc" }}>
-            <th style={header}>Order ID</th>
-            <th style={header}>Customer ID</th>
+          <tr
+            style={{
+              background: "#1E293B",
+              color: "#FFFFFF",
+            }}
+          >
+            <th style={header}>Order Number</th>
+            <th style={header}>Customer</th>
+            <th style={header}>Product</th>
+            <th style={header}>Quantity</th>
+            <th style={header}>Unit Price</th>
+            <th style={header}>Total</th>
+            <th style={header}>Order Status</th>
+            <th style={header}>Payment</th>
             <th style={header}>Order Date</th>
-            <th style={header}>Delivery Date</th>
-            <th style={header}>Status</th>
             <th style={header}>Actions</th>
           </tr>
         </thead>
@@ -47,11 +120,11 @@ export default function SalesOrderTable({
           {orders.length === 0 ? (
             <tr>
               <td
-                colSpan={6}
+                colSpan={10}
                 style={{
-                  padding: "30px",
+                  padding: "40px",
                   textAlign: "center",
-                  color: "#6b7280",
+                  color: "#64748B",
                 }}
               >
                 No sales orders found.
@@ -59,38 +132,87 @@ export default function SalesOrderTable({
             </tr>
           ) : (
             orders.map((order) => (
-              <tr key={order.id}>
-                <td style={cell}>{order.id}</td>
+              <tr
+                key={order.id}
+                style={{
+                  borderBottom:
+                    "1px solid #E5E7EB",
+                }}
+              >
+                <td style={cellStrong}>
+                  {order.order_number}
+                </td>
 
-                <td style={cell}>{order.customer_id}</td>
+                <td style={cell}>
+                  {order.customer_code}
+                </td>
 
-                <td style={cell}>{order.order_date}</td>
+                <td style={cell}>
+                  {order.product}
+                </td>
 
-                <td style={cell}>{order.delivery_date}</td>
+                <td style={cell}>
+                  {order.quantity}
+                </td>
+
+                <td style={cell}>
+                  R{" "}
+                  {order.unit_price.toLocaleString(
+                    "en-ZA",
+                    {
+                      minimumFractionDigits: 2,
+                    }
+                  )}
+                </td>
+
+                <td style={cellStrong}>
+                  R{" "}
+                  {order.total_amount.toLocaleString(
+                    "en-ZA",
+                    {
+                      minimumFractionDigits: 2,
+                    }
+                  )}
+                </td>
 
                 <td style={cell}>
                   <span
                     style={{
+                      ...getOrderStatusStyle(
+                        order.order_status
+                      ),
                       padding: "6px 12px",
-                      borderRadius: "20px",
-                      fontWeight: "bold",
-                      fontSize: "13px",
-                      background:
-                        order.status === "Delivered"
-                          ? "#dcfce7"
-                          : order.status === "Pending"
-                          ? "#fef3c7"
-                          : "#dbeafe",
-                      color:
-                        order.status === "Delivered"
-                          ? "#166534"
-                          : order.status === "Pending"
-                          ? "#92400e"
-                          : "#1d4ed8",
+                      borderRadius: "999px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      display: "inline-block",
                     }}
                   >
-                    {order.status}
+                    {order.order_status}
                   </span>
+                </td>
+
+                <td style={cell}>
+                  <span
+                    style={{
+                      ...getPaymentStatusStyle(
+                        order.payment_status
+                      ),
+                      padding: "6px 12px",
+                      borderRadius: "999px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      display: "inline-block",
+                    }}
+                  >
+                    {order.payment_status}
+                  </span>
+                </td>
+
+                <td style={cell}>
+                  {new Date(
+                    order.order_date
+                  ).toLocaleDateString("en-ZA")}
                 </td>
 
                 <td style={cell}>
@@ -118,32 +240,42 @@ export default function SalesOrderTable({
 }
 
 const header: React.CSSProperties = {
-  padding: "15px",
+  padding: "14px",
   textAlign: "left",
-  fontWeight: "bold",
-  color: "#374151",
+  fontWeight: "700",
+  whiteSpace: "nowrap",
 };
 
 const cell: React.CSSProperties = {
-  padding: "16px",
-  borderBottom: "1px solid #e5e7eb",
+  padding: "14px",
+  borderBottom: "1px solid #E5E7EB",
+  color: "#334155",
+  whiteSpace: "nowrap",
+};
+
+const cellStrong: React.CSSProperties = {
+  ...cell,
+  fontWeight: "700",
+  color: "#0F172A",
 };
 
 const editButton: React.CSSProperties = {
   background: "#2563EB",
-  color: "#ffffff",
+  color: "#FFFFFF",
   border: "none",
-  borderRadius: "8px",
-  padding: "8px 12px",
-  marginRight: "10px",
+  borderRadius: "7px",
+  padding: "7px 11px",
+  marginRight: "8px",
   cursor: "pointer",
+  fontWeight: "600",
 };
 
 const deleteButton: React.CSSProperties = {
   background: "#DC2626",
-  color: "#ffffff",
+  color: "#FFFFFF",
   border: "none",
-  borderRadius: "8px",
-  padding: "8px 12px",
+  borderRadius: "7px",
+  padding: "7px 11px",
   cursor: "pointer",
+  fontWeight: "600",
 };

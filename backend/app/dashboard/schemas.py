@@ -30,9 +30,22 @@ class SalesOrder(BaseModel):
     amount: float
 
 
+class InventoryChartData(BaseModel):
+    month: str
+    inventory: int
+
+
+class SalesChartData(BaseModel):
+    month: str
+    sales: int
+    purchase: int
+
+
 class DashboardSummary(BaseModel):
     kpis: KPIResponse
     inventory_alerts: list[InventoryAlert]
     ai_insights: list[AIInsight]
     purchase_orders: list[PurchaseOrder]
     sales_orders: list[SalesOrder]
+    inventory_chart: list[InventoryChartData]
+    sales_chart: list[SalesChartData]

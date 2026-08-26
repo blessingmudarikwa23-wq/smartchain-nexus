@@ -301,6 +301,23 @@ def add_executive_report(
     )
 
 
+# ==========================================================
+# EXECUTIVE REPORTING SUMMARY
+# ==========================================================
+
+@router.get(
+    "/executive-reporting/summary",
+)
+def executive_reporting_summary(
+    db: Session = Depends(get_db),
+):
+    return get_executive_reporting_summary(db)
+
+
+# ==========================================================
+# GET EXECUTIVE REPORTS
+# ==========================================================
+
 @router.get(
     "/executive-reporting",
     response_model=list[ExecutiveReportingResponse],
@@ -310,6 +327,10 @@ def list_executive_reports(
 ):
     return get_executive_reports(db)
 
+
+# ==========================================================
+# GET SINGLE EXECUTIVE REPORT
+# ==========================================================
 
 @router.get(
     "/executive-reporting/{report_id}",
@@ -332,6 +353,10 @@ def retrieve_executive_report(
 
     return report
 
+
+# ==========================================================
+# UPDATE EXECUTIVE REPORT
+# ==========================================================
 
 @router.put(
     "/executive-reporting/{report_id}",
@@ -357,6 +382,10 @@ def edit_executive_report(
     return updated_report
 
 
+# ==========================================================
+# DELETE EXECUTIVE REPORT
+# ==========================================================
+
 @router.delete(
     "/executive-reporting/{report_id}",
 )
@@ -377,16 +406,8 @@ def remove_executive_report(
 
     return {
         "message": "Executive report deleted successfully.",
+        "report_id": report_id,
     }
-
-
-@router.get(
-    "/executive-reporting/summary",
-)
-def executive_reporting_summary(
-    db: Session = Depends(get_db),
-):
-    return get_executive_reporting_summary(db)
 # ==========================================================
 # OPERATIONAL ANALYTICS
 # ==========================================================

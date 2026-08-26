@@ -2,52 +2,62 @@ import api from "./api";
 
 export interface Inventory {
   id: number;
-  product_id: number;
+  sku: string;
+  barcode: string | null;
+  item_name: string;
+  category: string;
   warehouse: string;
-  quantity_in_stock: number;
+  quantity: number;
+  unit: string;
+  unit_cost: number;
   minimum_stock: number;
-  reorder_level: number;
+  maximum_stock: number;
+  status: boolean;
 }
 
 export interface InventoryPayload {
-  product_id: number;
+  sku: string;
+  barcode?: string | null;
+  item_name: string;
+  category: string;
   warehouse: string;
-  quantity_in_stock: number;
+  quantity: number;
+  unit: string;
+  unit_cost: number;
   minimum_stock: number;
-  reorder_level: number;
+  maximum_stock: number;
 }
 
 export const inventoryService = {
   async getInventory(): Promise<Inventory[]> {
-    const response = await api.get("/inventory/");
-
-    return response.data.map((item: any) => ({
-      id: item.id,
-      product_id: item.product_id,
-      warehouse: item.warehouse ?? "",
-      quantity_in_stock: item.quantity,
-      minimum_stock: item.minimum_stock,
-      reorder_level: item.minimum_stock + 10,
-    }));
+    const response = await api.get<Inventory[]>("/inventory/");
+    return response.data;
   },
 
-  async createInventory(data: InventoryPayload) {
-    return api.post("/inventory/", {
-      product_id: data.product_id,
-      quantity: data.quantity_in_stock,
-      minimum_stock: data.minimum_stock,
-    });
+  async createInventory(
+    data: InventoryPayload
+  ): Promise<Inventory> {
+    const response = await api.post<Inventory>(
+      "/inventory/",
+      data
+    );
+
+    return response.data;
   },
 
-  async updateInventory(id: number, data: InventoryPayload) {
-    return api.put(`/inventory/${id}`, {
-      product_id: data.product_id,
-      quantity: data.quantity_in_stock,
-      minimum_stock: data.minimum_stock,
-    });
+  async updateInventory(
+    id: number,
+    data: Partial<InventoryPayload>
+  ): Promise<Inventory> {
+    const response = await api.put<Inventory>(
+      `/inventory/${id}`,
+      data
+    );
+
+    return response.data;
   },
 
-  async deleteInventory(id: number) {
-    return api.delete(`/inventory/${id}`);
+  async deleteInventory(id: number): Promise<void> {
+    await api.delete(`/inventory/${id}`);
   },
 };

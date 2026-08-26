@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-type InventoryChartData = {
+export type InventoryChartData = {
   month: string;
   inventory: number;
 };

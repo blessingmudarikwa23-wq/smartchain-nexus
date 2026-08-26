@@ -1,84 +1,177 @@
-import type { Customer } from "../../services/customerService";
+import { useState } from "react";
+
+import {
+  customerService,
+  type Customer,
+} from "../../services/customerService";
 
 type Props = {
   open: boolean;
   customer: Customer | null;
   onClose: () => void;
+  onDeleted?: () => Promise<void>;
 };
 
 export default function DeleteCustomerDialog({
   open,
   customer,
   onClose,
+  onDeleted,
 }: Props) {
-  if (!open || !customer) return null;
+  const [deleting, setDeleting] = useState(false);
+
+  if (!open || !customer) {
+    return null;
+  }
+
+  const handleDelete = async () => {
+    try {
+      setDeleting(true);
+
+      await customerService.deleteCustomer(
+        customer.id
+      );
+
+      if (onDeleted) {
+        await onDeleted();
+      }
+
+      onClose();
+    } catch (error) {
+      console.error(
+        "Failed to delete customer:",
+        error
+      );
+
+      alert("Failed to delete customer.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,.45)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 999,
-      }}
-    >
-      <div
-        style={{
-          width: "460px",
-          background: "#ffffff",
-          borderRadius: "16px",
-          padding: "30px",
-          boxShadow: "0 20px 50px rgba(0,0,0,.25)",
-        }}
-      >
-        <h2 style={{ color: "#DC2626" }}>
-          🗑 Delete Customer
+    <div style={overlay}>
+      <div style={modal}>
+        <div style={iconWrapper}>
+          🗑️
+        </div>
+
+        <h2 style={title}>
+          Delete Customer
         </h2>
 
-        <p style={{ marginTop: "20px" }}>
-          Are you sure you want to delete
-          <strong> {customer.customer_name}</strong>?
+        <p style={message}>
+          Are you sure you want to delete{" "}
+          <strong>{customer.customer_name}</strong>?
         </p>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "10px",
-            marginTop: "30px",
-          }}
-        >
+        <p style={warning}>
+          This action cannot be undone.
+        </p>
+
+        <div style={actions}>
           <button
+            type="button"
             onClick={onClose}
-            style={{
-              background: "#e5e7eb",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
+            disabled={deleting}
+            style={cancelButton}
           >
             Cancel
           </button>
 
           <button
-            style={{
-              background: "#DC2626",
-              color: "#ffffff",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            style={deleteButton}
           >
-            Delete
+            {deleting ? "Deleting..." : "Delete Customer"}
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+const overlay: React.CSSProperties = {
+  position: "fixed",
+  inset: 0,
+  background: "rgba(15, 23, 42, 0.48)",
+  backdropFilter: "blur(4px)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 9999,
+  padding: "20px",
+};
+
+const modal: React.CSSProperties = {
+  width: "430px",
+  maxWidth: "100%",
+  background: "#FFFFFF",
+  borderRadius: "18px",
+  padding: "30px",
+  textAlign: "center",
+  boxSizing: "border-box",
+  boxShadow: "0 25px 70px rgba(15, 23, 42, 0.25)",
+};
+
+const iconWrapper: React.CSSProperties = {
+  width: "58px",
+  height: "58px",
+  margin: "0 auto 16px",
+  borderRadius: "50%",
+  background: "#FEE2E2",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "25px",
+};
+
+const title: React.CSSProperties = {
+  margin: 0,
+  color: "#0F172A",
+  fontSize: "22px",
+  fontWeight: 800,
+};
+
+const message: React.CSSProperties = {
+  margin: "14px 0 5px",
+  color: "#475569",
+  fontSize: "14px",
+  lineHeight: 1.6,
+};
+
+const warning: React.CSSProperties = {
+  margin: "5px 0 0",
+  color: "#DC2626",
+  fontSize: "12px",
+  fontWeight: 600,
+};
+
+const actions: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+  gap: "10px",
+  marginTop: "26px",
+};
+
+const cancelButton: React.CSSProperties = {
+  border: "1px solid #D9E1EC",
+  background: "#FFFFFF",
+  color: "#475569",
+  padding: "11px 18px",
+  borderRadius: "9px",
+  cursor: "pointer",
+  fontWeight: 600,
+};
+
+const deleteButton: React.CSSProperties = {
+  border: "none",
+  background: "#DC2626",
+  color: "#FFFFFF",
+  padding: "11px 18px",
+  borderRadius: "9px",
+  cursor: "pointer",
+  fontWeight: 700,
+};

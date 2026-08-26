@@ -1,31 +1,94 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
-const menuStyle = {
-  color: "#ffffff",
-  textDecoration: "none",
-  padding: "12px 20px",
-  display: "flex",
-  alignItems: "center",
-  gap: "12px",
-  borderRadius: "8px",
-  marginBottom: "5px",
-  cursor: "pointer",
-  whiteSpace: "nowrap" as const,
+/* ==========================================================
+   ICON COMPONENT
+========================================================== */
+
+const Icon = ({
+  type,
+  size = 20,
+}: {
+  type: string;
+  size?: number;
+}) => {
+  const icons: Record<string, string> = {
+    dashboard:
+      "M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z",
+
+    executive:
+      "M4 19V9m5 10V5m5 14v-7m5 7V3",
+
+    procurement:
+      "M3 6h18M5 6l1 14h12l1-14M9 6V4h6v2M9 10v6m6-6v6",
+
+    inventory:
+      "M4 6h16v14H4V6Zm0 0 8 5 8-5M8 3h8",
+
+    warehouse:
+      "M3 20V9l9-6 9 6v11M7 20v-6h10v6M9 10h6",
+
+    logistics:
+      "M3 7h11v10H3V7Zm11 3h4l3 3v4h-7v-7ZM7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm11 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z",
+
+    sales:
+      "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-2h2v2Zm2-7c-.4.7-1.2 1.1-2 1.5-.6.3-1 .7-1 1.5h-2c0-1.8.9-2.7 2-3.3.7-.4 1.2-.8 1.2-1.5 0-.8-.6-1.4-1.5-1.4S10.2 8 10 9H8c.1-2 1.7-3.5 4-3.5 2.4 0 4 1.4 4 3.5 0 .7-.2 1.3-.6 2Z",
+
+    data:
+      "M4 19V5m0 14h16M8 16v-3m4 3V8m4 8V5",
+
+    business:
+      "M4 19V5m0 14h16M7 16v-4m4 4V8m4 8V6m4 10v-9",
+
+    ai:
+      "M12 3a4 4 0 0 1 4 4c0 1-.4 1.9-1 2.6 1.8.4 3 1.9 3 3.9V16H6v-2.5c0-2 1.2-3.5 3-3.9A4 4 0 0 1 8 7a4 4 0 0 1 4-4Zm-2 18h4m-5-3h6",
+
+    lean:
+      "M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z",
+
+    settings:
+      "M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L8 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L7.4 8.6 9.1 7l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6v-.2h2.4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.6 1Z",
+
+    user:
+      "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0",
+
+    chevron:
+      "m9 18 6-6-6-6",
+
+    home:
+      "M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.5Z",
+
+    close:
+      "M6 6l12 12M18 6 6 18",
+
+    profile:
+      "M20 21a8 8 0 0 0-16 0M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
+  };
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={icons[type] || icons.dashboard} />
+    </svg>
+  );
 };
 
-const subMenuStyle = {
-  color: "#CBD5E1",
-  textDecoration: "none",
-  padding: "10px 20px 10px 40px",
-  display: "block",
-  borderRadius: "6px",
-  marginBottom: "3px",
-  fontSize: "15px",
-  whiteSpace: "nowrap" as const,
-};
+/* ==========================================================
+   MAIN SIDEBAR
+========================================================== */
 
 export default function Sidebar() {
+  const location = useLocation();
+
   const [executiveOpen, setExecutiveOpen] = useState(false);
   const [procurementOpen, setProcurementOpen] = useState(false);
   const [inventoryOpen, setInventoryOpen] = useState(false);
@@ -38,592 +101,1167 @@ export default function Sidebar() {
   const [leanOpen, setLeanOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  return (
-    <aside
-  style={{
-    width: 280,
+  /* ==========================================================
+     ROUTE GROUPS
+  ========================================================== */
+
+  const executiveRoutes = [
+    "/executive-dashboard",
+    "/business-kpis",
+    "/financial-overview",
+    "/operational-performance",
+    "/risk-monitoring",
+  ];
+
+  const procurementRoutes = [
+    "/suppliers",
+    "/purchase-orders",
+    "/spend-analytics",
+    "/vendor-performance",
+    "/lead-time-analysis",
+  ];
+
+  const inventoryRoutes = [
+    "/inventory",
+    "/inventory-transactions",
+    "/inventory-adjustments",
+    "/abc-analysis",
+    "/xyz-analysis",
+    "/eoq",
+    "/safety-stock",
+    "/reorder-point",
+    "/inventory-turnover",
+  ];
+
+  const warehouseRoutes = [
+    "/receiving",
+    "/picking",
+    "/packing",
+    "/dispatch",
+    "/cycle-counts",
+    "/warehouse-performance",
+  ];
+
+  const logisticsRoutes = [
+    "/fleet-performance",
+    "/route-optimization",
+    "/delivery-tracking",
+    "/fuel-analysis",
+    "/distribution-analytics",
+  ];
+
+  const salesRoutes = [
+    "/customers",
+    "/sales-orders",
+    "/revenue-analysis",
+    "/profit-margin",
+  ];
+
+  const dataScienceRoutes = [
+    "/demand-forecasting",
+    "/sales-prediction",
+    "/supplier-risk-prediction",
+    "/customer-segmentation",
+    "/inventory-optimization",
+    "/anomaly-detection",
+  ];
+
+  const businessIntelRoutes = [
+    "/power-bi-dashboards",
+    "/executive-reporting",
+    "/operational-analytics",
+    "/interactive-kpi-monitoring",
+  ];
+
+  const aiRoutes = [
+    "/ai-supply-chain-assistant",
+    "/predictive-analytics",
+    "/intelligent-recommendations",
+    "/natural-language-queries",
+  ];
+
+  const leanRoutes = [
+    "/dmaic",
+    "/sipoc",
+    "/fishbone-analysis",
+    "/pareto-analysis",
+    "/fmea",
+    "/control-charts",
+    "/root-cause-analysis",
+  ];
+
+  const settingsRoutes = [
+    "/settings/profile",
+    "/settings/company",
+    "/settings/users",
+    "/settings/notifications",
+    "/settings/appearance",
+    "/settings/security",
+    "/settings/backup",
+    "/settings/integrations",
+    "/settings/audit",
+    "/settings/about",
+  ];
+
+  /* ==========================================================
+     ROUTE MATCHING
+  ========================================================== */
+
+  const normalizePath = (path: string) => {
+    if (path === "/") {
+      return "/";
+    }
+
+    return path.replace(/\/+$/, "");
+  };
+
+  const currentPath = normalizePath(location.pathname);
+
+  const routeIsActive = (route: string) => {
+    const normalizedRoute = normalizePath(route);
+
+    if (normalizedRoute === "/") {
+      return currentPath === "/";
+    }
+
+    return (
+      currentPath === normalizedRoute ||
+      currentPath.startsWith(`${normalizedRoute}/`)
+    );
+  };
+
+  const sectionIsActive = (routes: string[]) =>
+    routes.some((route) => routeIsActive(route));
+
+  /* ==========================================================
+     AUTO OPEN CURRENT SECTION
+     
+     IMPORTANT:
+     The sidebar now follows the current URL automatically.
+     Only the section containing the current page is opened.
+  ========================================================== */
+
+  useEffect(() => {
+    setExecutiveOpen(sectionIsActive(executiveRoutes));
+    setProcurementOpen(sectionIsActive(procurementRoutes));
+    setInventoryOpen(sectionIsActive(inventoryRoutes));
+    setWarehouseOpen(sectionIsActive(warehouseRoutes));
+    setLogisticsOpen(sectionIsActive(logisticsRoutes));
+    setSalesOpen(sectionIsActive(salesRoutes));
+    setDataScienceOpen(sectionIsActive(dataScienceRoutes));
+    setBusinessIntelOpen(sectionIsActive(businessIntelRoutes));
+    setAiOpen(sectionIsActive(aiRoutes));
+    setLeanOpen(sectionIsActive(leanRoutes));
+    setSettingsOpen(sectionIsActive(settingsRoutes));
+  }, [location.pathname]);
+
+  /* ==========================================================
+     STYLES
+  ========================================================== */
+
+  const sidebarStyle = {
+    width: "280px",
+    minWidth: "280px",
+    height: "100vh",
+    position: "sticky" as const,
+    top: 0,
+    left: 0,
     flexShrink: 0,
-        background: "#0F172A",
-        color: "#ffffff",
-        minHeight: "100vh",
-        overflowY: "auto",
-        padding: "20px",
-      }}
+    background:
+      "linear-gradient(180deg, #06152F 0%, #081B3A 45%, #07152F 100%)",
+    color: "#FFFFFF",
+    display: "flex",
+    flexDirection: "column" as const,
+    boxSizing: "border-box" as const,
+    borderRight: "1px solid rgba(148, 163, 184, 0.10)",
+    overflow: "hidden",
+    zIndex: 1000,
+  };
+
+  const logoAreaStyle = {
+    height: "96px",
+    minHeight: "96px",
+    display: "flex",
+    alignItems: "center",
+    padding: "0 24px",
+    boxSizing: "border-box" as const,
+    borderBottom: "1px solid rgba(148, 163, 184, 0.08)",
+  };
+
+  const logoBoxStyle = {
+    width: "38px",
+    height: "38px",
+    borderRadius: "10px",
+    background: "linear-gradient(135deg, #2563EB, #3B82F6)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: "12px",
+    boxShadow: "0 8px 20px rgba(37, 99, 235, 0.30)",
+    flexShrink: 0,
+  };
+
+  const menuContainerStyle = {
+    flex: 1,
+    overflowY: "auto" as const,
+    padding: "18px 15px 15px",
+    boxSizing: "border-box" as const,
+  };
+
+  const sectionLabelStyle = {
+    color: "#64748B",
+    fontSize: "10px",
+    fontWeight: 800,
+    letterSpacing: "1.4px",
+    padding: "10px 13px 8px",
+    textTransform: "uppercase" as const,
+  };
+
+  /* ==========================================================
+     MENU ITEM
+  ========================================================== */
+
+  const menuItemStyle = (
+    active: boolean,
+    open: boolean = false
+  ) => ({
+    width: "100%",
+    minHeight: "46px",
+    boxSizing: "border-box" as const,
+    color: active || open ? "#FFFFFF" : "#CBD5E1",
+    background: active
+      ? "linear-gradient(90deg, #1558C7 0%, #1D4ED8 100%)"
+      : open
+      ? "rgba(37, 99, 235, 0.10)"
+      : "transparent",
+    textDecoration: "none",
+    padding: "11px 13px",
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    borderRadius: "9px",
+    marginBottom: "4px",
+    cursor: "pointer",
+    whiteSpace: "nowrap" as const,
+
+    fontSize: "15px",
+
+    fontWeight: active ? 700 : 550,
+    transition: "all 0.2s ease",
+    border: "1px solid transparent",
+    boxShadow: active
+      ? "0 6px 16px rgba(37, 99, 235, 0.24)"
+      : "none",
+  });
+
+  const submenuStyle = (active: boolean) => ({
+    position: "relative" as const,
+    color: active ? "#FFFFFF" : "#94A3B8",
+    background: active
+      ? "rgba(37, 99, 235, 0.20)"
+      : "transparent",
+    textDecoration: "none",
+    padding: "9px 12px 9px 52px",
+    display: "flex",
+    alignItems: "center",
+    minHeight: "38px",
+    boxSizing: "border-box" as const,
+    borderRadius: "7px",
+    marginBottom: "2px",
+
+    fontSize: "14px",
+
+    fontWeight: active ? 650 : 500,
+    whiteSpace: "nowrap" as const,
+    transition: "all 0.2s ease",
+  });
+
+  /* ==========================================================
+     GROUP COMPONENT
+  ========================================================== */
+
+  const Section = ({
+    title,
+    icon,
+    open,
+    setOpen,
+    routes,
+    children,
+  }: {
+    title: string;
+    icon: string;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    routes: string[];
+    children: React.ReactNode;
+  }) => {
+    const active = sectionIsActive(routes);
+
+    return (
+      <div style={{ marginBottom: "3px" }}>
+        <button
+          type="button"
+          onClick={() => setOpen((current) => !current)}
+          style={{
+            ...menuItemStyle(active, open),
+            border: "none",
+            fontFamily: "inherit",
+            textAlign: "left" as const,
+          }}
+        >
+          <span
+            style={{
+              width: "20px",
+              height: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: active || open ? "#FFFFFF" : "#94A3B8",
+              flexShrink: 0,
+            }}
+          >
+            <Icon type={icon} size={19} />
+          </span>
+
+          <span style={{ flex: 1 }}>{title}</span>
+
+          <span
+            style={{
+              width: "18px",
+              height: "18px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transform: open ? "rotate(90deg)" : "rotate(0deg)",
+              transition: "transform 0.2s ease",
+              color: "#94A3B8",
+            }}
+          >
+            <Icon type="chevron" size={15} />
+          </span>
+        </button>
+
+        {open && (
+          <div
+            style={{
+              marginLeft: "10px",
+              paddingLeft: "9px",
+              borderLeft: "1px solid rgba(148, 163, 184, 0.16)",
+              marginBottom: "7px",
+            }}
+          >
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* ==========================================================
+     SIMPLE NAV ITEM
+  ========================================================== */
+
+  const SimpleNav = ({
+    to,
+    title,
+    icon,
+  }: {
+    to: string;
+    title: string;
+    icon: string;
+  }) => (
+    <NavLink
+      to={to}
+      end={to === "/"}
+      style={() => menuItemStyle(routeIsActive(to))}
     >
-      <h2
+      {() => {
+        const isActive = routeIsActive(to);
+
+        return (
+          <>
+            <span
+              style={{
+                width: "20px",
+                height: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: isActive ? "#FFFFFF" : "#94A3B8",
+                flexShrink: 0,
+              }}
+            >
+              <Icon type={icon} size={19} />
+            </span>
+
+            <span style={{ flex: 1 }}>{title}</span>
+
+            {isActive && (
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "#60A5FA",
+                  boxShadow: "0 0 8px rgba(96,165,250,.8)",
+                }}
+              />
+            )}
+          </>
+        );
+      }}
+    </NavLink>
+  );
+
+  /* ==========================================================
+     SUB NAV
+  ========================================================== */
+
+  const SubNav = ({
+    to,
+    title,
+  }: {
+    to: string;
+    title: string;
+  }) => (
+    <NavLink
+      to={to}
+      style={() => submenuStyle(routeIsActive(to))}
+    >
+      {() => {
+        const isActive = routeIsActive(to);
+
+        return (
+          <>
+            {isActive && (
+              <span
+                style={{
+                  position: "absolute",
+                  left: "-10px",
+                  width: "5px",
+                  height: "22px",
+                  borderRadius: "4px",
+                  background: "#3B82F6",
+                  boxShadow: "0 0 10px rgba(59,130,246,.65)",
+                }}
+              />
+            )}
+
+            <span
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: isActive ? "#3B82F6" : "#475569",
+                marginRight: "2px",
+                flexShrink: 0,
+              }}
+            />
+
+            <span>{title}</span>
+          </>
+        );
+      }}
+    </NavLink>
+  );
+
+  /* ==========================================================
+     RETURN
+  ========================================================== */
+
+  return (
+    <aside style={sidebarStyle}>
+      {/* ======================================================
+          BRAND
+      ====================================================== */}
+
+      <div style={logoAreaStyle}>
+        <div style={logoBoxStyle}>
+          <div
+            style={{
+              width: "18px",
+              height: "18px",
+              border: "3px solid #FFFFFF",
+              borderRadius: "4px",
+              transform: "rotate(45deg)",
+              opacity: 0.95,
+            }}
+          />
+        </div>
+
+        <div>
+          <div
+            style={{
+              fontSize: "17px",
+              fontWeight: 800,
+              letterSpacing: "-0.4px",
+              lineHeight: 1.1,
+            }}
+          >
+            SmartChain{" "}
+            <span style={{ color: "#3B82F6" }}>Nexus</span>
+          </div>
+
+          <div
+            style={{
+              color: "#64748B",
+              fontSize: "9px",
+              marginTop: "5px",
+              letterSpacing: "0.35px",
+              fontWeight: 600,
+            }}
+          >
+            SUPPLY CHAIN INTELLIGENCE
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================
+          NAVIGATION
+      ====================================================== */}
+
+      <div
         style={{
-          textAlign: "center",
-          marginBottom: "35px",
+          ...menuContainerStyle,
+          scrollbarWidth: "thin",
+          scrollbarColor: "#1E3A67 transparent",
         }}
       >
-        SmartChain Nexus
-      </h2>
+        <div style={sectionLabelStyle}>Main Navigation</div>
 
-      <NavLink to="/" style={menuStyle}>
-        🏠 Dashboard
-      </NavLink>
+        <SimpleNav
+          to="/"
+          title="Dashboard"
+          icon="home"
+        />
 
-      {/* Executive Intelligence */}
+        {/* ====================================================
+            EXECUTIVE INTELLIGENCE
+        ==================================================== */}
 
-      <div
-        style={menuStyle}
-        onClick={() => setExecutiveOpen(!executiveOpen)}
-      >
-  
-  📊 Executive Intelligence
-</div>
+        <Section
+          title="Executive Intelligence"
+          icon="executive"
+          open={executiveOpen}
+          setOpen={setExecutiveOpen}
+          routes={executiveRoutes}
+        >
+          <SubNav
+            to="/executive-dashboard"
+            title="CEO Dashboard"
+          />
 
-{executiveOpen && (
-  <>
-    <NavLink
-      to="/executive-dashboard"
-      style={subMenuStyle}
-    >
-      CEO Dashboard
-    </NavLink>
+          <SubNav
+            to="/business-kpis"
+            title="Business KPIs"
+          />
 
-    <NavLink
-      to="/business-kpis"
-      style={subMenuStyle}
-    >
-      Business KPIs
-    </NavLink>
+          <SubNav
+            to="/financial-overview"
+            title="Financial Overview"
+          />
 
-    <NavLink
-      to="/financial-overview"
-      style={subMenuStyle}
-    >
-      Financial Overview
-    </NavLink>
+          <SubNav
+            to="/operational-performance"
+            title="Operational Performance"
+          />
 
-    <NavLink
-      to="/operational-performance"
-      style={subMenuStyle}
-    >
-      Operational Performance
-    </NavLink>
+          <SubNav
+            to="/risk-monitoring"
+            title="Risk Monitoring"
+          />
+        </Section>
 
-    <NavLink
-      to="/risk-monitoring"
-      style={subMenuStyle}
-    >
-      Risk Monitoring
-    </NavLink>
-  </>
-)}
+        {/* ====================================================
+            PROCUREMENT
+        ==================================================== */}
 
-      {/* Procurement */}
+        <Section
+          title="Procurement"
+          icon="procurement"
+          open={procurementOpen}
+          setOpen={setProcurementOpen}
+          routes={procurementRoutes}
+        >
+          <SubNav
+            to="/suppliers"
+            title="Supplier Management"
+          />
 
-      <div
-        style={menuStyle}
-        onClick={() => setProcurementOpen(!procurementOpen)}
-      >
-        📦 Procurement
-      </div>
+          <SubNav
+            to="/purchase-orders"
+            title="Purchase Orders"
+          />
 
-      {procurementOpen && (
-        <>
-          <NavLink to="/suppliers" style={subMenuStyle}>
-            Supplier Management
-          </NavLink>
+          <SubNav
+            to="/spend-analytics"
+            title="Spend Analytics"
+          />
 
-          <NavLink to="/purchase-orders" style={subMenuStyle}>
-            Purchase Orders
-          </NavLink>
+          <SubNav
+            to="/vendor-performance"
+            title="Vendor Performance"
+          />
 
-          <NavLink
-  to="/spend-analytics"
-  style={subMenuStyle}
->
-  Spend Analytics
-</NavLink>
+          <SubNav
+            to="/lead-time-analysis"
+            title="Lead Time Analysis"
+          />
+        </Section>
 
-          <NavLink
-  to="/vendor-performance"
-  style={subMenuStyle}
->
-  Vendor Performance
-</NavLink>
+        {/* ====================================================
+            INVENTORY
+        ==================================================== */}
 
-          <NavLink
-  to="/lead-time-analysis"
-  style={subMenuStyle}
->
-  Lead Time Analysis
-</NavLink>
-        </>
-      )}
+        <Section
+          title="Inventory"
+          icon="inventory"
+          open={inventoryOpen}
+          setOpen={setInventoryOpen}
+          routes={inventoryRoutes}
+        >
+          <SubNav
+            to="/inventory"
+            title="Stock Monitoring"
+          />
 
-      {/* Inventory */}
+          <SubNav
+            to="/inventory-transactions"
+            title="Inventory Transactions"
+          />
 
-      <div
-        style={menuStyle}
-        onClick={() => setInventoryOpen(!inventoryOpen)}
-      >
-        🏬 Inventory
-      </div>
+          <SubNav
+            to="/inventory-adjustments"
+            title="Inventory Adjustments"
+          />
 
-      {inventoryOpen && (
-        <>
-          <NavLink
-  to="/inventory"
-  style={subMenuStyle}
->
-  Stock Monitoring
-</NavLink>
+          <SubNav
+            to="/abc-analysis"
+            title="ABC Analysis"
+          />
 
-          <NavLink
-  to="/inventory-transactions"
-  style={subMenuStyle}
->
-  Inventory Transactions
-</NavLink>
+          <SubNav
+            to="/xyz-analysis"
+            title="XYZ Analysis"
+          />
 
-          <NavLink
-  to="/inventory-adjustments"
-  style={subMenuStyle}
->
-  Inventory Adjustments
-</NavLink>
+          <SubNav
+            to="/eoq"
+            title="EOQ"
+          />
 
-          <NavLink
-  to="/abc-analysis"
-  style={subMenuStyle}
->
-  ABC Analysis
-</NavLink>
+          <SubNav
+            to="/safety-stock"
+            title="Safety Stock"
+          />
 
-          <NavLink
-  to="/xyz-analysis"
-  style={subMenuStyle}
->
-  XYZ Analysis
-</NavLink>
+          <SubNav
+            to="/reorder-point"
+            title="Reorder Point"
+          />
 
-          <NavLink
-  to="/eoq"
-  style={subMenuStyle}
->
-  EOQ
-</NavLink>
+          <SubNav
+            to="/inventory-turnover"
+            title="Inventory Turnover"
+          />
+        </Section>
 
-          <NavLink
-  to="/safety-stock"
-  style={subMenuStyle}
->
-  Safety Stock
-</NavLink>
+        {/* ====================================================
+            WAREHOUSE
+        ==================================================== */}
 
-          <NavLink
-  to="/reorder-point"
-  style={subMenuStyle}
->
-  Reorder Point
-</NavLink>
+        <Section
+          title="Warehouse"
+          icon="warehouse"
+          open={warehouseOpen}
+          setOpen={setWarehouseOpen}
+          routes={warehouseRoutes}
+        >
+          <SubNav
+            to="/receiving"
+            title="Receiving"
+          />
 
-          <NavLink
-  to="/inventory-turnover"
-  style={subMenuStyle}
->
-  Inventory Turnover
-</NavLink>
-        </>
-      )}
-            {/* Warehouse */}
+          <SubNav
+            to="/picking"
+            title="Picking"
+          />
 
-<div
-  style={menuStyle}
-  onClick={() => setWarehouseOpen(!warehouseOpen)}
->
-  🏭 Warehouse
-</div>
+          <SubNav
+            to="/packing"
+            title="Packing"
+          />
 
-{warehouseOpen && (
-  <>
-    <NavLink
-      to="/receiving"
-      style={subMenuStyle}
-    >
-      Receiving
-    </NavLink>
+          <SubNav
+            to="/dispatch"
+            title="Dispatch"
+          />
 
-    <NavLink
-  to="/picking"
-  style={subMenuStyle}
->
-  Picking
-</NavLink>
+          <SubNav
+            to="/cycle-counts"
+            title="Cycle Counts"
+          />
 
-    <NavLink
-  to="/packing"
-  style={subMenuStyle}
->
-  Packing
-</NavLink>
+          <SubNav
+            to="/warehouse-performance"
+            title="Warehouse Performance"
+          />
+        </Section>
 
-    <NavLink
-  to="/dispatch"
-  style={subMenuStyle}
->
-  Dispatch
-</NavLink>
+        {/* ====================================================
+            LOGISTICS
+        ==================================================== */}
 
-    <NavLink
-  to="/cycle-counts"
-  style={subMenuStyle}
->
-  Cycle Counts
-</NavLink>
+        <Section
+          title="Logistics"
+          icon="logistics"
+          open={logisticsOpen}
+          setOpen={setLogisticsOpen}
+          routes={logisticsRoutes}
+        >
+          <SubNav
+            to="/fleet-performance"
+            title="Fleet Performance"
+          />
 
-    <NavLink
-  to="/warehouse-performance"
-  style={subMenuStyle}
->
-  Warehouse Performance
-</NavLink>
-  </>
-)}
+          <SubNav
+            to="/route-optimization"
+            title="Route Optimization"
+          />
 
-      {/* Logistics */}
+          <SubNav
+            to="/delivery-tracking"
+            title="Delivery Tracking"
+          />
 
-      <div
-        style={menuStyle}
-        onClick={() => setLogisticsOpen(!logisticsOpen)}
-      >
-        🚚 Logistics
-      </div>
+          <SubNav
+            to="/fuel-analysis"
+            title="Fuel Analysis"
+          />
 
-      {logisticsOpen && (
-        <>
-          <NavLink
-  to="/fleet-performance"
-  style={subMenuStyle}
->
-  Fleet Performance
-</NavLink>
+          <SubNav
+            to="/distribution-analytics"
+            title="Distribution Analytics"
+          />
+        </Section>
 
-          <NavLink
-  to="/route-optimization"
-  style={subMenuStyle}
->
-  Route Optimization
-</NavLink>
+        {/* ====================================================
+            SALES
+        ==================================================== */}
 
-          <NavLink
-  to="/delivery-tracking"
-  style={subMenuStyle}
->
-  Delivery Tracking
-</NavLink>
-
-          <NavLink
-  to="/fuel-analysis"
-  style={subMenuStyle}
->
-  Fuel Analysis
-</NavLink>
-
-          <NavLink
-  to="/distribution-analytics"
-  style={subMenuStyle}
->
-  Distribution Analytics
-</NavLink>
-        </>
-      )}
-
-      {/* Sales */}
-
-      <div
-        style={menuStyle}
-        onClick={() => setSalesOpen(!salesOpen)}
-      >
-        💰 Sales
-      </div>
-
-      {salesOpen && (
-        <>
-          <NavLink
+        <Section
+          title="Sales"
+          icon="sales"
+          open={salesOpen}
+          setOpen={setSalesOpen}
+          routes={salesRoutes}
+        >
+          <SubNav
             to="/customers"
-            style={subMenuStyle}
-          >
-            Customer Management
-          </NavLink>
+            title="Customer Management"
+          />
 
-          <NavLink
+          <SubNav
             to="/sales-orders"
-            style={subMenuStyle}
+            title="Sales Orders"
+          />
+
+          <SubNav
+            to="/revenue-analysis"
+            title="Revenue Analysis"
+          />
+
+          <SubNav
+            to="/profit-margin"
+            title="Profit Margin"
+          />
+        </Section>
+
+        <div
+          style={{
+            height: "1px",
+            background: "rgba(148,163,184,.08)",
+            margin: "14px 8px",
+          }}
+        />
+
+        <div style={sectionLabelStyle}>
+          Intelligence & Analytics
+        </div>
+
+        {/* ====================================================
+            DATA SCIENCE
+        ==================================================== */}
+
+        <Section
+          title="Data Science"
+          icon="data"
+          open={dataScienceOpen}
+          setOpen={setDataScienceOpen}
+          routes={dataScienceRoutes}
+        >
+          <SubNav
+            to="/demand-forecasting"
+            title="Demand Forecasting"
+          />
+
+          <SubNav
+            to="/sales-prediction"
+            title="Sales Prediction"
+          />
+
+          <SubNav
+            to="/supplier-risk-prediction"
+            title="Supplier Risk Prediction"
+          />
+
+          <SubNav
+            to="/customer-segmentation"
+            title="Customer Segmentation"
+          />
+
+          <SubNav
+            to="/inventory-optimization"
+            title="Inventory Optimization"
+          />
+
+          <SubNav
+            to="/anomaly-detection"
+            title="Anomaly Detection"
+          />
+        </Section>
+
+        {/* ====================================================
+            BUSINESS INTELLIGENCE
+        ==================================================== */}
+
+        <Section
+          title="Business Intelligence"
+          icon="business"
+          open={businessIntelOpen}
+          setOpen={setBusinessIntelOpen}
+          routes={businessIntelRoutes}
+        >
+          <SubNav
+            to="/power-bi-dashboards"
+            title="Power BI Dashboards"
+          />
+
+          <SubNav
+            to="/executive-reporting"
+            title="Executive Reporting"
+          />
+
+          <SubNav
+            to="/operational-analytics"
+            title="Operational Analytics"
+          />
+
+          <SubNav
+            to="/interactive-kpi-monitoring"
+            title="Interactive KPI Monitoring"
+          />
+        </Section>
+
+        {/* ====================================================
+            ARTIFICIAL INTELLIGENCE
+        ==================================================== */}
+
+        <Section
+          title="Artificial Intelligence"
+          icon="ai"
+          open={aiOpen}
+          setOpen={setAiOpen}
+          routes={aiRoutes}
+        >
+          <SubNav
+            to="/ai-supply-chain-assistant"
+            title="AI Supply Chain Assistant"
+          />
+
+          <SubNav
+            to="/predictive-analytics"
+            title="Predictive Analytics"
+          />
+
+          <SubNav
+            to="/intelligent-recommendations"
+            title="Intelligent Recommendations"
+          />
+
+          <SubNav
+            to="/natural-language-queries"
+            title="Natural Language Queries"
+          />
+        </Section>
+
+        <div
+          style={{
+            height: "1px",
+            background: "rgba(148,163,184,.08)",
+            margin: "14px 8px",
+          }}
+        />
+
+        <div style={sectionLabelStyle}>
+          Process Excellence
+        </div>
+
+        {/* ====================================================
+            LEAN SIX SIGMA
+        ==================================================== */}
+
+        <Section
+          title="Lean Six Sigma"
+          icon="lean"
+          open={leanOpen}
+          setOpen={setLeanOpen}
+          routes={leanRoutes}
+        >
+          <SubNav
+            to="/dmaic"
+            title="DMAIC"
+          />
+
+          <SubNav
+            to="/sipoc"
+            title="SIPOC"
+          />
+
+          <SubNav
+            to="/fishbone-analysis"
+            title="Fishbone Analysis"
+          />
+
+          <SubNav
+            to="/pareto-analysis"
+            title="Pareto Analysis"
+          />
+
+          <SubNav
+            to="/fmea"
+            title="FMEA"
+          />
+
+          <SubNav
+            to="/control-charts"
+            title="Control Charts"
+          />
+
+          <SubNav
+            to="/root-cause-analysis"
+            title="Root Cause Analysis"
+          />
+        </Section>
+
+        <div
+          style={{
+            height: "1px",
+            background: "rgba(148,163,184,.08)",
+            margin: "14px 8px",
+          }}
+        />
+
+        <div style={sectionLabelStyle}>
+          System
+        </div>
+
+        {/* ====================================================
+            SETTINGS
+        ==================================================== */}
+
+        <Section
+          title="Settings"
+          icon="settings"
+          open={settingsOpen}
+          setOpen={setSettingsOpen}
+          routes={settingsRoutes}
+        >
+          <SubNav
+            to="/settings/profile"
+            title="Profile Settings"
+          />
+
+          <SubNav
+            to="/settings/company"
+            title="Company Settings"
+          />
+
+          <SubNav
+            to="/settings/users"
+            title="User Management"
+          />
+
+          <SubNav
+            to="/settings/notifications"
+            title="Notification Settings"
+          />
+
+          <SubNav
+            to="/settings/appearance"
+            title="Appearance"
+          />
+
+          <SubNav
+            to="/settings/security"
+            title="Security"
+          />
+
+          <SubNav
+            to="/settings/backup"
+            title="Backup & Restore"
+          />
+
+          <SubNav
+            to="/settings/integrations"
+            title="Integrations"
+          />
+
+          <SubNav
+            to="/settings/audit"
+            title="Audit Logs"
+          />
+
+          <SubNav
+            to="/settings/about"
+            title="About SmartChain Nexus"
+          />
+        </Section>
+      </div>
+
+      {/* ======================================================
+          USER PROFILE CARD
+      ====================================================== */}
+
+      <div
+        style={{
+          padding: "12px 15px 15px",
+          borderTop: "1px solid rgba(148,163,184,.10)",
+          background:
+            "linear-gradient(180deg, rgba(8,27,58,.25), rgba(5,18,42,.8))",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(15, 39, 76, 0.72)",
+            border: "1px solid rgba(96,165,250,.13)",
+            borderRadius: "12px",
+            padding: "11px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          {/* Avatar */}
+
+          <div
+            style={{
+              position: "relative",
+              width: "42px",
+              height: "42px",
+              borderRadius: "50%",
+              background:
+                "linear-gradient(135deg, #2563EB, #7C3AED)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 800,
+              fontSize: "14px",
+              flexShrink: 0,
+              boxShadow: "0 5px 14px rgba(37,99,235,.3)",
+            }}
           >
-            Sales Orders
+            BM
+
+            <span
+              style={{
+                position: "absolute",
+                right: "-1px",
+                bottom: "0px",
+                width: "9px",
+                height: "9px",
+                borderRadius: "50%",
+                background: "#10B981",
+                border: "2px solid #102B52",
+              }}
+            />
+          </div>
+
+          {/* User details */}
+
+          <div
+            style={{
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            <div
+              style={{
+                color: "#FFFFFF",
+                fontSize: "12px",
+                fontWeight: 750,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              Blessing Mudarikwa
+            </div>
+
+            <div
+              style={{
+                color: "#94A3B8",
+                fontSize: "10px",
+                marginTop: "3px",
+              }}
+            >
+              Administrator
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                color: "#10B981",
+                fontSize: "10px",
+                marginTop: "3px",
+                fontWeight: 600,
+              }}
+            >
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "#10B981",
+                }}
+              />
+
+              Online
+            </div>
+          </div>
+
+          {/* Profile icon */}
+
+          <NavLink
+            to="/settings/profile"
+            style={{
+              width: "27px",
+              height: "27px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#64748B",
+              borderRadius: "6px",
+              textDecoration: "none",
+            }}
+            title="Profile Settings"
+          >
+            <Icon type="chevron" size={15} />
           </NavLink>
-
-          <NavLink
-  to="/revenue-analysis"
-  style={subMenuStyle}
->
-  Revenue Analysis
-</NavLink>
-
-          <NavLink
-  to="/profit-margin"
-  style={subMenuStyle}
->
-  Profit Margin
-</NavLink>
-        </>
-      )}
-
-      {/* Data Science */}
-
-      <div
-        style={menuStyle}
-        onClick={() => setDataScienceOpen(!dataScienceOpen)}
-      >
-        🧠 Data Science
+        </div>
       </div>
-
-      {dataScienceOpen && (
-        <>
-          <NavLink
-  to="/demand-forecasting"
-  style={subMenuStyle}
->
-  Demand Forecasting
-</NavLink>
-
-          <NavLink
-  to="/sales-prediction"
-  style={subMenuStyle}
->
-  Sales Prediction
-</NavLink>
-
-          <NavLink
-  to="/supplier-risk-prediction"
-  style={subMenuStyle}
->
-  Supplier Risk Prediction
-</NavLink>
-
-          <NavLink
-  to="/customer-segmentation"
-  style={subMenuStyle}
->
-  Customer Segmentation
-</NavLink>
-
-          <NavLink
-  to="/inventory-optimization"
-  style={subMenuStyle}
->
-  Inventory Optimization
-</NavLink>
-
-          <NavLink
-  to="/anomaly-detection"
-  style={subMenuStyle}
->
-  Anomaly Detection
-</NavLink>
-        </>
-      )}
-            {/* Business Intelligence */}
-
-      <div
-        style={menuStyle}
-        onClick={() => setBusinessIntelOpen(!businessIntelOpen)}
-      >
-        📈 Business Intelligence
-      </div>
-
-      {businessIntelOpen && (
-        <>
-          <NavLink
-  to="/power-bi-dashboards"
-  style={subMenuStyle}
->
-  Power BI Dashboards
-</NavLink>
-
-          <NavLink
-  to="/executive-reporting"
-  style={subMenuStyle}
->
-  Executive Reporting
-</NavLink>
-
-          <NavLink
-  to="/operational-analytics"
-  style={subMenuStyle}
->
-  Operational Analytics
-</NavLink>
-
-          <NavLink
-  to="/interactive-kpi-monitoring"
-  style={subMenuStyle}
->
-  Interactive KPI Monitoring
-</NavLink>
-        </>
-      )}
-
-      {/* Artificial Intelligence */}
-
-      <div
-        style={menuStyle}
-        onClick={() => setAiOpen(!aiOpen)}
-      >
-        🤖 Artificial Intelligence
-      </div>
-
-      {aiOpen && (
-        <>
-          <NavLink
-  to="/ai-supply-chain-assistant"
-  style={subMenuStyle}
->
-  AI Supply Chain Assistant
-</NavLink>
-
-          <NavLink
-  to="/predictive-analytics"
-  style={subMenuStyle}
->
-  Predictive Analytics
-</NavLink>
-
-          <NavLink
-  to="/intelligent-recommendations"
-  style={subMenuStyle}
->
-  Intelligent Recommendations
-</NavLink>
-
-          <NavLink
-  to="/natural-language-queries"
-  style={subMenuStyle}
->
-  Natural Language Queries
-</NavLink>
-        </>
-      )}
-
-      {/* Lean Six Sigma */}
-
-      <div
-        style={menuStyle}
-        onClick={() => setLeanOpen(!leanOpen)}
-      >
-        ⚙️ Lean Six Sigma
-      </div>
-
-      {leanOpen && (
-        <>
-          <NavLink
-  to="/dmaic"
-  style={subMenuStyle}
->
-  DMAIC
-</NavLink>
-
-          <NavLink
-  to="/sipoc"
-  style={subMenuStyle}
->
-  SIPOC
-</NavLink>
-
-          <NavLink
-  to="/fishbone-analysis"
-  style={subMenuStyle}
->
-  Fishbone Analysis
-</NavLink>
-
-          <NavLink
-  to="/pareto-analysis"
-  style={subMenuStyle}
->
-  Pareto Analysis
-</NavLink>
-
-          <NavLink
-  to="/fmea"
-  style={subMenuStyle}
->
-  FMEA
-</NavLink>
-
-          <NavLink
-  to="/control-charts"
-  style={subMenuStyle}
->
-  Control Charts
-</NavLink>
-
-          <NavLink
-  to="/root-cause-analysis"
-  style={subMenuStyle}
->
-  Root Cause Analysis
-</NavLink>
-        </>
-      )}
-                  {/* ================= SETTINGS ================= */}
-
-      <div
-        style={menuStyle}
-        onClick={() => setSettingsOpen(!settingsOpen)}
-      >
-        ⚙️ Settings
-      </div>
-
-      {settingsOpen && (
-        <>
-          <NavLink to="/settings/profile" style={subMenuStyle}>
-            👤 Profile Settings
-          </NavLink>
-
-          <NavLink to="/settings/company" style={subMenuStyle}>
-            🏢 Company Settings
-          </NavLink>
-
-          <NavLink to="/settings/users" style={subMenuStyle}>
-            👥 User Management
-          </NavLink>
-
-          <NavLink to="/settings/notifications" style={subMenuStyle}>
-            🔔 Notification Settings
-          </NavLink>
-
-          <NavLink to="/settings/appearance" style={subMenuStyle}>
-            🎨 Appearance
-          </NavLink>
-
-          <NavLink to="/settings/security" style={subMenuStyle}>
-            🔐 Security
-          </NavLink>
-
-          <NavLink to="/settings/backup" style={subMenuStyle}>
-            💾 Backup & Restore
-          </NavLink>
-
-          <NavLink to="/settings/integrations" style={subMenuStyle}>
-            🔌 Integrations
-          </NavLink>
-
-          <NavLink to="/settings/audit" style={subMenuStyle}>
-            📜 Audit Logs
-          </NavLink>
-
-          <NavLink to="/settings/about" style={subMenuStyle}>
-            ℹ️ About SmartChain Nexus
-          </NavLink>
-        </>
-      )}
-          </aside>
+    </aside>
   );
 }
-
-

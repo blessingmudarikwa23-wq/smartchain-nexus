@@ -95,7 +95,7 @@ export default function RecentSalesOrders({
         {data.map((order) => {
           const formattedAmount =
             typeof order.amount === "number"
-              ? `$${order.amount.toLocaleString()}`
+              ? `R${order.amount.toLocaleString("en-ZA")}`
               : order.amount;
 
           return (

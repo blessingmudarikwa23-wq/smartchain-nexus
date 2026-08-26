@@ -1,26 +1,29 @@
+from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 # ==========================================================
-# CRUD SCHEMAS
+# INVENTORY ITEM CRUD
 # ==========================================================
 
 class InventoryItemCreate(BaseModel):
     sku: str
+    barcode: Optional[str] = None
     item_name: str
     category: str
     warehouse: str
-    quantity: float = 0
+    quantity: float = 0.0
     unit: str = "Units"
-    unit_cost: float = 0
-    minimum_stock: float = 0
-    maximum_stock: float = 0
+    unit_cost: float = 0.0
+    minimum_stock: float = 0.0
+    maximum_stock: float = 0.0
 
 
 class InventoryItemUpdate(BaseModel):
     sku: Optional[str] = None
+    barcode: Optional[str] = None
     item_name: Optional[str] = None
     category: Optional[str] = None
     warehouse: Optional[str] = None
@@ -35,6 +38,7 @@ class InventoryItemUpdate(BaseModel):
 class InventoryItemResponse(BaseModel):
     id: int
     sku: str
+    barcode: Optional[str] = None
     item_name: str
     category: str
     warehouse: str
@@ -45,12 +49,11 @@ class InventoryItemResponse(BaseModel):
     maximum_stock: float
     status: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==========================================================
-# DASHBOARD SCHEMAS
+# INVENTORY DASHBOARD
 # ==========================================================
 
 class InventoryItem(BaseModel):
@@ -84,6 +87,7 @@ class InventoryDashboard(BaseModel):
     transactions: list[InventoryTransaction]
     analytics: InventoryAnalytics
 
+
 # ==========================================================
 # INVENTORY ADJUSTMENTS
 # ==========================================================
@@ -91,30 +95,49 @@ class InventoryDashboard(BaseModel):
 class InventoryAdjustmentCreate(BaseModel):
     inventory_item_id: int
     adjustment_type: str
-    quantity: int
+    quantity: float
     reason: Optional[str] = None
     adjusted_by: str
 
 
 class InventoryAdjustmentUpdate(BaseModel):
     adjustment_type: Optional[str] = None
-    quantity: Optional[int] = None
+    quantity: Optional[float] = None
     reason: Optional[str] = None
     adjusted_by: Optional[str] = None
 
 
 class InventoryAdjustmentResponse(BaseModel):
     id: int
+
     inventory_item_id: int
+
+    # Product information
+    item_name: str
+    sku: str
+    category: str
+    warehouse: str
+
+    # Adjustment information
     adjustment_type: str
-    quantity: int
-    reason: Optional[str]
+    quantity: float
+
+    # Stock movement
+    previous_quantity: float
+    new_quantity: float
+    current_quantity: float
+
+    # Adjustment details
+    reason: Optional[str] = None
     adjusted_by: str
 
-    class Config:
-        from_attributes = True
+    created_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================================
-# ABC ANALYSIS SCHEMAS
+# ABC ANALYSIS
 # ==========================================================
 
 class ABCAnalysisCreate(BaseModel):
@@ -147,10 +170,11 @@ class ABCAnalysisResponse(BaseModel):
     cumulative_percentage: float
     classification: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================================
-# XYZ ANALYSIS SCHEMAS
+# XYZ ANALYSIS
 # ==========================================================
 
 class XYZAnalysisCreate(BaseModel):
@@ -180,10 +204,11 @@ class XYZAnalysisResponse(BaseModel):
     coefficient_of_variation: float
     classification: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================================
-# EOQ ANALYSIS SCHEMAS
+# EOQ ANALYSIS
 # ==========================================================
 
 class EOQAnalysisCreate(BaseModel):
@@ -211,8 +236,9 @@ class EOQAnalysisResponse(BaseModel):
     holding_cost: float
     economic_order_quantity: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================================
 # SAFETY STOCK
 # ==========================================================
@@ -224,7 +250,6 @@ class SafetyStockCreate(BaseModel):
     lead_time_days: float
     demand_std_dev: float
     service_level: float = 95.0
-    safety_stock: float
 
 
 class SafetyStockUpdate(BaseModel):
@@ -234,7 +259,6 @@ class SafetyStockUpdate(BaseModel):
     lead_time_days: Optional[float] = None
     demand_std_dev: Optional[float] = None
     service_level: Optional[float] = None
-    safety_stock: Optional[float] = None
 
 
 class SafetyStockResponse(BaseModel):
@@ -247,53 +271,48 @@ class SafetyStockResponse(BaseModel):
     service_level: float
     safety_stock: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================================
-# REORDER POINT SCHEMAS
+# REORDER POINT
 # ==========================================================
 
-from pydantic import BaseModel
-from datetime import datetime
+class ReorderPointCreate(BaseModel):
+    sku: str
+    item_name: str
+    average_daily_usage: float
+    lead_time_days: float
+    safety_stock: float
 
 
-class ReorderPointBase(BaseModel):
+class ReorderPointUpdate(BaseModel):
+    sku: Optional[str] = None
+    item_name: Optional[str] = None
+    average_daily_usage: Optional[float] = None
+    lead_time_days: Optional[float] = None
+    safety_stock: Optional[float] = None
+
+
+class ReorderPointResponse(BaseModel):
+    id: int
     sku: str
     item_name: str
     average_daily_usage: float
     lead_time_days: float
     safety_stock: float
     reorder_point: float
-
-
-class ReorderPointCreate(ReorderPointBase):
-    pass
-
-
-class ReorderPointUpdate(BaseModel):
-    sku: str | None = None
-    item_name: str | None = None
-    average_daily_usage: float | None = None
-    lead_time_days: float | None = None
-    safety_stock: float | None = None
-    reorder_point: float | None = None
-
-
-class ReorderPointResponse(ReorderPointBase):
-    id: int
     created_at: datetime
+    updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
 # ==========================================================
-# INVENTORY TURNOVER SCHEMAS
+# INVENTORY TURNOVER
 # ==========================================================
 
-from pydantic import BaseModel
-from datetime import datetime
-
-
-class InventoryTurnoverBase(BaseModel):
+class InventoryTurnoverCreate(BaseModel):
     sku: str
     item_name: str
     beginning_inventory: float
@@ -301,28 +320,61 @@ class InventoryTurnoverBase(BaseModel):
     cost_of_goods_sold: float
 
 
-class InventoryTurnoverCreate(InventoryTurnoverBase):
-    pass
-
-
 class InventoryTurnoverUpdate(BaseModel):
-    sku: str | None = None
-    item_name: str | None = None
-    beginning_inventory: float | None = None
-    ending_inventory: float | None = None
-    cost_of_goods_sold: float | None = None
+    sku: Optional[str] = None
+    item_name: Optional[str] = None
+    beginning_inventory: Optional[float] = None
+    ending_inventory: Optional[float] = None
+    cost_of_goods_sold: Optional[float] = None
 
 
-class InventoryTurnoverResponse(InventoryTurnoverBase):
+class InventoryTurnoverResponse(BaseModel):
     id: int
-
+    sku: str
+    item_name: str
+    beginning_inventory: float
+    ending_inventory: float
     average_inventory: float
+    cost_of_goods_sold: float
     inventory_turnover_ratio: float
     days_in_inventory: float
-
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ==========================================================
+# INVENTORY TRANSACTION
+# ==========================================================
+
+class InventoryTransactionCreate(BaseModel):
+    transaction_id: str
+    inventory_item_id: int
+    transaction_type: str
+    quantity: float
+    reference: Optional[str] = None
+    notes: Optional[str] = None
+    transaction_date: Optional[datetime] = None
+
+
+class InventoryTransactionUpdate(BaseModel):
+    transaction_type: Optional[str] = None
+    quantity: Optional[float] = None
+    reference: Optional[str] = None
+    notes: Optional[str] = None
+    transaction_date: Optional[datetime] = None
+
+
+class InventoryTransactionResponse(BaseModel):
+    id: int
+    transaction_id: str
+    inventory_item_id: int
+    transaction_type: str
+    quantity: float
+    reference: Optional[str] = None
+    notes: Optional[str] = None
+    transaction_date: datetime
+    created_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)

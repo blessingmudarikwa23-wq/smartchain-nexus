@@ -1,9 +1,9 @@
 from app.artificial_intelligence.schemas import (
     ArtificialIntelligenceDashboard,
-    AISupplyChainAssistant,
-    PredictiveAnalytics,
-    IntelligentRecommendation,
-    NaturalLanguageQuery,
+    AISupplyChainAssistant as AISupplyChainAssistantSchema,
+    PredictiveAnalytics as PredictiveAnalyticsSchema,
+    IntelligentRecommendation as IntelligentRecommendationSchema,
+    NaturalLanguageQuery as NaturalLanguageQuerySchema,
 )
 
 
@@ -11,38 +11,38 @@ def get_ai_dashboard():
 
     return ArtificialIntelligenceDashboard(
 
-        assistant=AISupplyChainAssistant(
+        assistant=AISupplyChainAssistantSchema(
             message="Hello Blessing. SmartChain AI is ready to assist."
         ),
 
         predictive_analytics=[
-            PredictiveAnalytics(
+            PredictiveAnalyticsSchema(
                 prediction="Demand expected to increase by 22% next month.",
                 confidence=96,
             ),
-            PredictiveAnalytics(
+            PredictiveAnalyticsSchema(
                 prediction="Supplier delays likely to decrease by 8%.",
                 confidence=91,
             ),
         ],
 
         recommendations=[
-            IntelligentRecommendation(
+            IntelligentRecommendationSchema(
                 title="Inventory",
                 recommendation="Increase Laptop Stand stock by 15%.",
             ),
-            IntelligentRecommendation(
+            IntelligentRecommendationSchema(
                 title="Procurement",
                 recommendation="Negotiate bulk pricing with Dell Technologies.",
             ),
         ],
 
         natural_language_queries=[
-            NaturalLanguageQuery(
+            NaturalLanguageQuerySchema(
                 question="Which supplier has the highest risk?",
                 answer="Lenovo currently has the highest supplier risk.",
             ),
-            NaturalLanguageQuery(
+            NaturalLanguageQuerySchema(
                 question="What products should be reordered?",
                 answer="USB-C Cable and Laptop Stand.",
             ),
