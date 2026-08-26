@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -29,6 +31,23 @@ import app.database.models
 
 
 # ==========================================================
+# ENVIRONMENT CONFIGURATION
+# ==========================================================
+
+frontend_urls = os.getenv(
+    "FRONTEND_URLS",
+    "http://localhost:5173,http://localhost:5174,http://localhost:5175,"
+    "http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175",
+)
+
+allow_origins = [
+    origin.strip()
+    for origin in frontend_urls.split(",")
+    if origin.strip()
+]
+
+
+# ==========================================================
 # DATABASE INITIALIZATION
 # ==========================================================
 
@@ -41,6 +60,11 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="SmartChain Nexus API",
+    description=(
+        "SmartChain Nexus backend API for supply chain management, "
+        "business intelligence, data science, artificial intelligence, "
+        "and operational analytics."
+    ),
     version="1.0.0",
 )
 
@@ -51,14 +75,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-        "http://127.0.0.1:5175",
-    ],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -70,17 +87,29 @@ app.add_middleware(
 # ==========================================================
 
 app.include_router(dashboard_router)
+
 app.include_router(auth_router)
+
 app.include_router(executive_router)
+
 app.include_router(procurement_router)
+
 app.include_router(inventory_router)
+
 app.include_router(warehouse_router)
+
 app.include_router(logistics_router)
+
 app.include_router(sales_router)
+
 app.include_router(data_science_router)
+
 app.include_router(business_intelligence_router)
+
 app.include_router(artificial_intelligence_router)
+
 app.include_router(lean_router)
+
 app.include_router(settings_router)
 
 
@@ -91,5 +120,31 @@ app.include_router(settings_router)
 @app.get("/")
 def root():
     return {
-        "message": "SmartChain Nexus Backend Running"
+        "message": "SmartChain Nexus Backend Running",
+        "status": "online",
+        "version": "1.0.0",
+    }
+
+
+# ==========================================================
+# HEALTH CHECK
+# ==========================================================
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "service": "SmartChain Nexus API",
+    }
+
+
+# ==========================================================
+# API HEALTH CHECK
+# ==========================================================
+
+@app.get("/api/health")
+def api_health_check():
+    return {
+        "status": "healthy",
+        "message": "SmartChain Nexus API is operational",
     }
