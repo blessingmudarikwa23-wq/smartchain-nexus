@@ -3,42 +3,39 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database.base import Base
-from app.database.session import engine
-
-from app.dashboard.router import router as dashboard_router
-from app.auth.router import router as auth_router
-from app.executive_intelligence.router import router as executive_router
-from app.procurement.router import router as procurement_router
-from app.inventory.router import router as inventory_router
-from app.warehouse.router import router as warehouse_router
-from app.logistics.router import router as logistics_router
-from app.sales.router import router as sales_router
-from app.data_science.router import router as data_science_router
-
-from app.business_intelligence.router import (
-    router as business_intelligence_router,
-)
-
+import app.database.models
 from app.artificial_intelligence.router import (
     router as artificial_intelligence_router,
 )
-
+from app.auth.router import router as auth_router
+from app.business_intelligence.router import (
+    router as business_intelligence_router,
+)
+from app.dashboard.router import router as dashboard_router
+from app.data_science.router import router as data_science_router
+from app.database.base import Base
+from app.database.session import engine
+from app.executive_intelligence.router import router as executive_router
+from app.inventory.router import router as inventory_router
 from app.lean_six_sigma.router import router as lean_router
+from app.logistics.router import router as logistics_router
+from app.procurement.router import router as procurement_router
+from app.sales.router import router as sales_router
 from app.settings.router import router as settings_router
-
-import app.database.models
-
+from app.warehouse.router import router as warehouse_router
 
 # ==========================================================
 # ENVIRONMENT CONFIGURATION
 # ==========================================================
 
-frontend_urls = os.getenv(
-    "FRONTEND_URLS",
+# Set FRONTEND_URLS on Render/production to include your deployed frontend domains.
+# Wildcard regex handles Vercel preview deployments (e.g., https://smartchain-nexus-xyz.vercel.app).
+default_origins = (
     "http://localhost:5173,http://localhost:5174,http://localhost:5175,"
-    "http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175",
+    "http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175"
 )
+
+frontend_urls = os.getenv("FRONTEND_URLS", default_origins)
 
 allow_origins = [
     origin.strip()
@@ -76,8 +73,9 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allow_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app|https://.*\.onrender\.com",
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -87,34 +85,22 @@ app.add_middleware(
 # ==========================================================
 
 app.include_router(dashboard_router)
-
 app.include_router(auth_router)
-
 app.include_router(executive_router)
-
 app.include_router(procurement_router)
-
 app.include_router(inventory_router)
-
 app.include_router(warehouse_router)
-
 app.include_router(logistics_router)
-
 app.include_router(sales_router)
-
 app.include_router(data_science_router)
-
 app.include_router(business_intelligence_router)
-
 app.include_router(artificial_intelligence_router)
-
 app.include_router(lean_router)
-
 app.include_router(settings_router)
 
 
 # ==========================================================
-# ROOT ENDPOINT
+# ROOT & HEALTH CHECK ENDPOINTS
 # ==========================================================
 
 @app.get("/")
@@ -126,10 +112,6 @@ def root():
     }
 
 
-# ==========================================================
-# HEALTH CHECK
-# ==========================================================
-
 @app.get("/health")
 def health_check():
     return {
@@ -137,10 +119,6 @@ def health_check():
         "service": "SmartChain Nexus API",
     }
 
-
-# ==========================================================
-# API HEALTH CHECK
-# ==========================================================
 
 @app.get("/api/health")
 def api_health_check():
