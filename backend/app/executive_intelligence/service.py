@@ -113,9 +113,32 @@ def get_all_ceo_dashboards(
     db: Session,
 ) -> list[CEODashboard]:
 
-    return db.query(
-        CEODashboard
-    ).all()
+    dashboard = (
+        db.query(CEODashboard)
+        .order_by(CEODashboard.id.desc())
+        .first()
+    )
+
+    if dashboard is None:
+        dashboard = CEODashboard(
+            total_revenue=0.0,
+            total_cost=0.0,
+            gross_profit=0.0,
+            profit_margin=0.0,
+            inventory_value=0.0,
+            order_fulfillment_rate=0.0,
+            supplier_performance=0.0,
+            operational_efficiency=0.0,
+            active_risks=0,
+            critical_risks=0,
+            overall_status="Healthy",
+        )
+
+        db.add(dashboard)
+        db.commit()
+        db.refresh(dashboard)
+
+    return [dashboard]
 
 
 def update_ceo_dashboard(
