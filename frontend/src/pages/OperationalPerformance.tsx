@@ -11,7 +11,7 @@ type OperationalPerformanceData = {
 };
 
 const API_URL =
-  "http://127.0.0.1:8000/executive-intelligence/operational-performance/";
+  "https://smartchain-nexus-3.onrender.com/executive-intelligence/operational-performance/";
 
 type IconName =
   | "analytics"

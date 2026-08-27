@@ -36,7 +36,7 @@ type SortOption =
   | "on_time";
 
 const API_URL =
-  "http://127.0.0.1:8000/logistics/distribution-analytics";
+  "https://smartchain-nexus-3.onrender.com/logistics/distribution-analytics";
 
 const emptyForm: DistributionAnalyticsForm = {
   distribution_center: "",

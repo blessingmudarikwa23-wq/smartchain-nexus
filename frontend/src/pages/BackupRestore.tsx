@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function BackupRestore() {
-  const API_URL = "http://127.0.0.1:8000/settings";
+  const API_URL = "https://smartchain-nexus-3.onrender.com/settings";
 
   const [backups, setBackups] = useState([]);
   const [selectedBackup, setSelectedBackup] = useState(null);

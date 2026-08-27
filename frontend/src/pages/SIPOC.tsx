@@ -21,7 +21,7 @@ interface SIPOCFormData {
   status: string;
 }
 
-const API_URL = "http://127.0.0.1:8000/lean-six-sigma/sipoc";
+const API_URL = "https://smartchain-nexus-3.onrender.com/lean-six-sigma/sipoc";
 
 const emptyForm: SIPOCFormData = {
   process_name: "",

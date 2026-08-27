@@ -31,7 +31,7 @@ type SortOption =
   | "efficiency";
 
 const API_URL =
-  "http://127.0.0.1:8000/logistics/fuel-analysis";
+  "https://smartchain-nexus-3.onrender.com/logistics/fuel-analysis";
 
 const emptyForm: FuelAnalysisForm = {
   vehicle_number: "",

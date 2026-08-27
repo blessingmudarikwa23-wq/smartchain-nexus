@@ -29,7 +29,7 @@ type FishboneFormData = {
 };
 
 const API_URL =
-  "http://127.0.0.1:8000/lean-six-sigma/fishbone-analysis";
+  "https://smartchain-nexus-3.onrender.com/lean-six-sigma/fishbone-analysis";
 
 const emptyForm: FishboneFormData = {
   problem: "",

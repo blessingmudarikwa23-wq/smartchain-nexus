@@ -222,7 +222,7 @@ export default function RiskMonitoring() {
       setError("");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/executive-intelligence/risk-monitoring/"
+        "https://smartchain-nexus-3.onrender.com/executive-intelligence/risk-monitoring/"
       );
 
       if (!response.ok) {

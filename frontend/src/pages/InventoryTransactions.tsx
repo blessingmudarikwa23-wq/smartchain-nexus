@@ -30,7 +30,7 @@ type TransactionForm = {
 };
 
 const API_URL =
-  "http://127.0.0.1:8000/inventory/transactions";
+  "https://smartchain-nexus-3.onrender.com/inventory/transactions";
 
 const getCurrentDateTime = (): string => {
   const now = new Date();

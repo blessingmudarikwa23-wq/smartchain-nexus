@@ -24,7 +24,7 @@ type RouteForm = {
 };
 
 const API_URL =
-  "http://127.0.0.1:8000/logistics/route-optimization";
+  "https://smartchain-nexus-3.onrender.com/logistics/route-optimization";
 
 const emptyForm: RouteForm = {
   route_name: "",

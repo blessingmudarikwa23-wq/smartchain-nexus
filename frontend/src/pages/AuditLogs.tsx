@@ -23,7 +23,7 @@ export default function AuditLogs() {
   // BACKEND URL
   // ==========================================================
 
-  const API_URL = "http://127.0.0.1:8000/settings/audit";
+  const API_URL = "https://smartchain-nexus-3.onrender.com/settings/audit";
 
   // ==========================================================
   // MODULES

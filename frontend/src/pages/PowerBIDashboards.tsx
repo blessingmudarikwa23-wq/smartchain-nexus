@@ -8,7 +8,7 @@ export default function PowerBIDashboards() {
   const [error, setError] = useState("");
 
   const API_URL =
-    "http://127.0.0.1:8000/business-intelligence/power-bi-dashboards";
+    "https://smartchain-nexus-3.onrender.com/business-intelligence/power-bi-dashboards";
 
   useEffect(() => {
     fetchDashboards();

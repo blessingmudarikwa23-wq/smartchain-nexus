@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 const API_URL =
-  "http://127.0.0.1:8000/business-intelligence/operational-analytics";
+  "https://smartchain-nexus-3.onrender.com/business-intelligence/operational-analytics";
 
 const EMPTY_FORM = {
   metric_name: "",

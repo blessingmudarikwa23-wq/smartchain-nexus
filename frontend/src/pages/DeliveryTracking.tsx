@@ -30,7 +30,7 @@ type DeliveryForm = {
 type SortOption = "newest" | "oldest";
 
 const API_URL =
-  "http://127.0.0.1:8000/logistics/delivery-tracking";
+  "https://smartchain-nexus-3.onrender.com/logistics/delivery-tracking";
 
 const emptyForm: DeliveryForm = {
   order_number: "",

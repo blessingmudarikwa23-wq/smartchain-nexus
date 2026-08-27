@@ -8,7 +8,7 @@ export default function Integrations() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const API_URL = "http://127.0.0.1:8000/settings";
+  const API_URL = "https://smartchain-nexus-3.onrender.com/settings";
 
   // ==========================================================
   // DEFAULT INTEGRATIONS

@@ -31,7 +31,7 @@ export interface SafetyStockUpdate {
   safety_stock?: number;
 }
 
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "https://smartchain-nexus-3.onrender.com";
 
 export const safetyStockService = {
   async getAll(): Promise<SafetyStock[]> {

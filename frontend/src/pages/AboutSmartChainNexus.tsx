@@ -287,7 +287,7 @@ function Icon({
 ========================================================== */
 
 export default function AboutSmartChainNexus() {
-  const API_URL = "http://127.0.0.1:8000/settings/about";
+  const API_URL = "https://smartchain-nexus-3.onrender.com/settings/about";
 
   const [aboutId, setAboutId] = useState<number | null>(null);
 

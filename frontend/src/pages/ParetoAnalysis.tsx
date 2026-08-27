@@ -18,7 +18,7 @@ type ParetoFormData = {
 };
 
 const API_URL =
-  "http://127.0.0.1:8000/lean-six-sigma/pareto-analysis";
+  "https://smartchain-nexus-3.onrender.com/lean-six-sigma/pareto-analysis";
 
 export default function ParetoAnalysis() {
   const [paretoData, setParetoData] = useState<ParetoRecord[]>([]);

@@ -25,7 +25,7 @@ type FMEAFormData = {
 };
 
 const API_URL =
-  "http://127.0.0.1:8000/lean-six-sigma/fmea";
+  "https://smartchain-nexus-3.onrender.com/lean-six-sigma/fmea";
 
 export default function FMEA() {
   const [fmeaData, setFmeaData] = useState<FMEARecord[]>([]);
