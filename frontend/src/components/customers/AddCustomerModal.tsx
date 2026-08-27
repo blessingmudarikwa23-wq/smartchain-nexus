@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { ChangeEvent, CSSProperties } from "react";
 
 import type { CustomerCreate } from "../../services/customerService";
 
@@ -34,7 +33,7 @@ export default function AddCustomerModal({
   }
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = event.target;
 
@@ -83,6 +82,7 @@ export default function AddCustomerModal({
   return (
     <div style={overlay}>
       <div style={modal}>
+        {/* Header */}
         <div style={header}>
           <div style={headerIcon}>👥</div>
 
@@ -95,6 +95,7 @@ export default function AddCustomerModal({
           </div>
         </div>
 
+        {/* Form */}
         <div style={formGrid}>
           <div>
             <label style={label}>
@@ -218,6 +219,7 @@ export default function AddCustomerModal({
           </div>
         </div>
 
+        {/* Footer */}
         <div style={footer}>
           <button
             type="button"
@@ -242,7 +244,7 @@ export default function AddCustomerModal({
   );
 }
 
-const overlay: CSSProperties = {
+const overlay: React.CSSProperties = {
   position: "fixed",
   inset: 0,
   background: "rgba(15, 23, 42, 0.55)",
@@ -253,7 +255,7 @@ const overlay: CSSProperties = {
   padding: "20px",
 };
 
-const modal: CSSProperties = {
+const modal: React.CSSProperties = {
   width: "620px",
   maxWidth: "100%",
   maxHeight: "90vh",
@@ -263,10 +265,9 @@ const modal: CSSProperties = {
   boxShadow: "0 25px 60px rgba(15, 23, 42, 0.25)",
   border: "1px solid #E2E8F0",
   padding: "30px",
-  boxSizing: "border-box",
 };
 
-const header: CSSProperties = {
+const header: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: "14px",
@@ -275,7 +276,7 @@ const header: CSSProperties = {
   borderBottom: "1px solid #E2E8F0",
 };
 
-const headerIcon: CSSProperties = {
+const headerIcon: React.CSSProperties = {
   width: "48px",
   height: "48px",
   borderRadius: "12px",
@@ -286,30 +287,30 @@ const headerIcon: CSSProperties = {
   fontSize: "24px",
 };
 
-const title: CSSProperties = {
+const title: React.CSSProperties = {
   margin: 0,
   color: "#0F172A",
   fontSize: "24px",
   fontWeight: 700,
 };
 
-const subtitle: CSSProperties = {
+const subtitle: React.CSSProperties = {
   margin: "4px 0 0",
   color: "#64748B",
   fontSize: "14px",
 };
 
-const formGrid: CSSProperties = {
+const formGrid: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
   gap: "18px",
 };
 
-const fullWidth: CSSProperties = {
+const fullWidth: React.CSSProperties = {
   gridColumn: "1 / -1",
 };
 
-const label: CSSProperties = {
+const label: React.CSSProperties = {
   display: "block",
   marginBottom: "7px",
   color: "#334155",
@@ -317,7 +318,7 @@ const label: CSSProperties = {
   fontWeight: 600,
 };
 
-const input: CSSProperties = {
+const input: React.CSSProperties = {
   width: "100%",
   height: "44px",
   padding: "0 13px",
@@ -330,7 +331,7 @@ const input: CSSProperties = {
   boxSizing: "border-box",
 };
 
-const footer: CSSProperties = {
+const footer: React.CSSProperties = {
   display: "flex",
   justifyContent: "flex-end",
   gap: "10px",
@@ -339,7 +340,7 @@ const footer: CSSProperties = {
   borderTop: "1px solid #E2E8F0",
 };
 
-const cancelButton: CSSProperties = {
+const cancelButton: React.CSSProperties = {
   height: "42px",
   padding: "0 18px",
   borderRadius: "9px",
@@ -351,7 +352,7 @@ const cancelButton: CSSProperties = {
   fontWeight: 600,
 };
 
-const saveButton: CSSProperties = {
+const saveButton: React.CSSProperties = {
   height: "42px",
   padding: "0 20px",
   borderRadius: "9px",

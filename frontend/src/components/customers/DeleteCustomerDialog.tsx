@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { CSSProperties } from "react";
 
 import {
   customerService,
@@ -29,7 +28,9 @@ export default function DeleteCustomerDialog({
     try {
       setDeleting(true);
 
-      await customerService.deleteCustomer(customer.id);
+      await customerService.deleteCustomer(
+        customer.id
+      );
 
       if (onDeleted) {
         await onDeleted();
@@ -84,9 +85,7 @@ export default function DeleteCustomerDialog({
             disabled={deleting}
             style={deleteButton}
           >
-            {deleting
-              ? "Deleting..."
-              : "Delete Customer"}
+            {deleting ? "Deleting..." : "Delete Customer"}
           </button>
         </div>
       </div>
@@ -94,7 +93,7 @@ export default function DeleteCustomerDialog({
   );
 }
 
-const overlay: CSSProperties = {
+const overlay: React.CSSProperties = {
   position: "fixed",
   inset: 0,
   background: "rgba(15, 23, 42, 0.48)",
@@ -106,7 +105,7 @@ const overlay: CSSProperties = {
   padding: "20px",
 };
 
-const modal: CSSProperties = {
+const modal: React.CSSProperties = {
   width: "430px",
   maxWidth: "100%",
   background: "#FFFFFF",
@@ -117,7 +116,7 @@ const modal: CSSProperties = {
   boxShadow: "0 25px 70px rgba(15, 23, 42, 0.25)",
 };
 
-const iconWrapper: CSSProperties = {
+const iconWrapper: React.CSSProperties = {
   width: "58px",
   height: "58px",
   margin: "0 auto 16px",
@@ -129,35 +128,35 @@ const iconWrapper: CSSProperties = {
   fontSize: "25px",
 };
 
-const title: CSSProperties = {
+const title: React.CSSProperties = {
   margin: 0,
   color: "#0F172A",
   fontSize: "22px",
   fontWeight: 800,
 };
 
-const message: CSSProperties = {
+const message: React.CSSProperties = {
   margin: "14px 0 5px",
   color: "#475569",
   fontSize: "14px",
   lineHeight: 1.6,
 };
 
-const warning: CSSProperties = {
+const warning: React.CSSProperties = {
   margin: "5px 0 0",
   color: "#DC2626",
   fontSize: "12px",
   fontWeight: 600,
 };
 
-const actions: CSSProperties = {
+const actions: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   gap: "10px",
   marginTop: "26px",
 };
 
-const cancelButton: CSSProperties = {
+const cancelButton: React.CSSProperties = {
   border: "1px solid #D9E1EC",
   background: "#FFFFFF",
   color: "#475569",
@@ -167,7 +166,7 @@ const cancelButton: CSSProperties = {
   fontWeight: 600,
 };
 
-const deleteButton: CSSProperties = {
+const deleteButton: React.CSSProperties = {
   border: "none",
   background: "#DC2626",
   color: "#FFFFFF",

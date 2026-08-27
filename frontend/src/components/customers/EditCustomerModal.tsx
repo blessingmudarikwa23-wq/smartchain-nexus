@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { ChangeEvent, CSSProperties } from "react";
 
 import {
   customerService,
@@ -44,7 +43,7 @@ export default function EditCustomerModal({
   }
 
   const handleChange = (
-    event: ChangeEvent<
+    event: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement
     >
   ) => {
@@ -53,8 +52,9 @@ export default function EditCustomerModal({
     setForm((previous) => ({
       ...previous,
       [name]:
-        name === "total_orders" ||
-        name === "total_spend"
+        name === "total_orders"
+          ? Number(value)
+          : name === "total_spend"
           ? Number(value)
           : value,
     }));
@@ -76,16 +76,7 @@ export default function EditCustomerModal({
 
       await customerService.updateCustomer(
         customer.id,
-        {
-          ...form,
-          customer_code:
-            form.customer_code.trim(),
-          customer_name:
-            form.customer_name.trim(),
-          email: form.email?.trim() || null,
-          phone: form.phone?.trim() || null,
-          address: form.address?.trim() || null,
-        }
+        form
       );
 
       if (onUpdated) {
@@ -110,9 +101,7 @@ export default function EditCustomerModal({
       <div style={modal}>
         <div style={header}>
           <div>
-            <h2 style={title}>
-              ✏️ Edit Customer
-            </h2>
+            <h2 style={title}>✏️ Edit Customer</h2>
 
             <p style={subtitle}>
               Update customer information
@@ -203,12 +192,16 @@ export default function EditCustomerModal({
 
             <select
               name="customer_type"
-              value={form.customer_type ?? "Retail"}
+              value={form.customer_type ?? "Regular"}
               onChange={handleChange}
               style={input}
             >
-              <option value="Retail">
-                Retail
+              <option value="Regular">
+                Regular
+              </option>
+
+              <option value="VIP">
+                VIP
               </option>
 
               <option value="Wholesale">
@@ -217,10 +210,6 @@ export default function EditCustomerModal({
 
               <option value="Corporate">
                 Corporate
-              </option>
-
-              <option value="Distributor">
-                Distributor
               </option>
             </select>
           </div>
@@ -263,9 +252,7 @@ export default function EditCustomerModal({
             disabled={saving}
             style={saveButton}
           >
-            {saving
-              ? "Saving..."
-              : "Save Changes"}
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>
@@ -273,7 +260,7 @@ export default function EditCustomerModal({
   );
 }
 
-const overlay: CSSProperties = {
+const overlay: React.CSSProperties = {
   position: "fixed",
   inset: 0,
   background: "rgba(15, 23, 42, 0.48)",
@@ -285,7 +272,7 @@ const overlay: CSSProperties = {
   padding: "20px",
 };
 
-const modal: CSSProperties = {
+const modal: React.CSSProperties = {
   width: "560px",
   maxWidth: "100%",
   maxHeight: "90vh",
@@ -297,27 +284,27 @@ const modal: CSSProperties = {
   boxShadow: "0 25px 70px rgba(15, 23, 42, 0.25)",
 };
 
-const header: CSSProperties = {
+const header: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-start",
   justifyContent: "space-between",
   marginBottom: "24px",
 };
 
-const title: CSSProperties = {
+const title: React.CSSProperties = {
   margin: 0,
   color: "#0F172A",
   fontSize: "23px",
   fontWeight: 800,
 };
 
-const subtitle: CSSProperties = {
+const subtitle: React.CSSProperties = {
   margin: "6px 0 0",
   color: "#64748B",
   fontSize: "13px",
 };
 
-const closeButton: CSSProperties = {
+const closeButton: React.CSSProperties = {
   width: "34px",
   height: "34px",
   border: "none",
@@ -328,31 +315,31 @@ const closeButton: CSSProperties = {
   cursor: "pointer",
 };
 
-const formGrid: CSSProperties = {
+const formGrid: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
   gap: "16px",
 };
 
-const field: CSSProperties = {
+const field: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
 };
 
-const fieldFull: CSSProperties = {
+const fieldFull: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   gridColumn: "1 / -1",
 };
 
-const label: CSSProperties = {
+const label: React.CSSProperties = {
   marginBottom: "7px",
   color: "#334155",
   fontSize: "13px",
   fontWeight: 700,
 };
 
-const input: CSSProperties = {
+const input: React.CSSProperties = {
   width: "100%",
   height: "44px",
   padding: "0 12px",
@@ -365,7 +352,7 @@ const input: CSSProperties = {
   fontSize: "13px",
 };
 
-const actions: CSSProperties = {
+const actions: React.CSSProperties = {
   display: "flex",
   justifyContent: "flex-end",
   gap: "10px",
@@ -374,7 +361,7 @@ const actions: CSSProperties = {
   borderTop: "1px solid #EEF2F7",
 };
 
-const cancelButton: CSSProperties = {
+const cancelButton: React.CSSProperties = {
   border: "1px solid #D9E1EC",
   background: "#FFFFFF",
   color: "#475569",
@@ -384,9 +371,9 @@ const cancelButton: CSSProperties = {
   fontWeight: 600,
 };
 
-const saveButton: CSSProperties = {
+const saveButton: React.CSSProperties = {
   border: "none",
-  background: "#2563EB",
+  background: "linear-gradient(135deg, #2563EB, #315FEA)",
   color: "#FFFFFF",
   padding: "11px 20px",
   borderRadius: "9px",
