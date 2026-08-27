@@ -29,46 +29,6 @@ from app.warehouse.router import router as warehouse_router
 
 
 # ==========================================================
-# ENVIRONMENT CONFIGURATION
-# ==========================================================
-
-# Local development origins
-default_origins = (
-    "http://localhost:5173,"
-    "http://localhost:5174,"
-    "http://localhost:5175,"
-    "http://127.0.0.1:5173,"
-    "http://127.0.0.1:5174,"
-    "http://127.0.0.1:5175"
-)
-
-# Production frontend URL
-production_frontend_url = (
-    "https://smartchain-nexus-frontend.onrender.com"
-)
-
-# Read additional frontend URLs from environment variables if provided
-frontend_urls = os.getenv(
-    "FRONTEND_URLS",
-    f"{default_origins},{production_frontend_url}",
-)
-
-# Convert comma-separated URLs into a clean list
-allow_origins = [
-    origin.strip().rstrip("/")
-    for origin in frontend_urls.split(",")
-    if origin.strip()
-]
-
-
-# ==========================================================
-# DATABASE INITIALIZATION
-# ==========================================================
-
-Base.metadata.create_all(bind=engine)
-
-
-# ==========================================================
 # FASTAPI APPLICATION
 # ==========================================================
 
@@ -89,11 +49,29 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allow_origins,
+    allow_origins=[
+        # Local development
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+        "http://127.0.0.1:5175",
+
+        # Production frontend
+        "https://smartchain-nexus-frontend.onrender.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ==========================================================
+# DATABASE INITIALIZATION
+# ==========================================================
+
+Base.metadata.create_all(bind=engine)
 
 
 # ==========================================================
@@ -129,7 +107,7 @@ def root():
 
 
 # ==========================================================
-# HEALTH CHECK ENDPOINT
+# HEALTH CHECK
 # ==========================================================
 
 @app.get("/health")
@@ -141,7 +119,7 @@ def health_check():
 
 
 # ==========================================================
-# API HEALTH CHECK ENDPOINT
+# API HEALTH CHECK
 # ==========================================================
 
 @app.get("/api/health")
