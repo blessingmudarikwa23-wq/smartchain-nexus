@@ -1,3 +1,6 @@
+from collections import defaultdict
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from app.sales.models import (
@@ -18,69 +21,13 @@ from app.sales.schemas import (
     ProfitMarginUpdate,
 )
 
-def get_sales_dashboard():
-
-    return SalesDashboard(
-
-        customers=[
-            Customer(
-                id=1,
-                name="ABC Retail",
-                email="sales@abcretail.com",
-            ),
-            Customer(
-                id=2,
-                name="Tech Solutions",
-                email="info@techsolutions.com",
-            ),
-            Customer(
-                id=3,
-                name="Global Traders",
-                email="sales@globaltraders.com",
-            ),
-        ],
-
-        sales_orders=[
-            SalesOrder(
-                reference="SO-2001",
-                customer="ABC Retail",
-                amount=12450,
-                status="Completed",
-            ),
-            SalesOrder(
-                reference="SO-2002",
-                customer="Tech Solutions",
-                amount=8920,
-                status="Processing",
-            ),
-            SalesOrder(
-                reference="SO-2003",
-                customer="Global Traders",
-                amount=15730,
-                status="Completed",
-            ),
-        ],
-
-        revenue=RevenueAnalysis(
-            total_revenue=2450000,
-            monthly_revenue=185000,
-            profit_margin=33.2,
-        ),
-    )
-from app.sales.models import Customer
-from app.sales.schemas import (
-    CustomerCreate,
-    CustomerUpdate,
-)
-
 
 # ==========================================================
-# CUSTOMER MANAGEMENT SERVICE
+# CUSTOMER MANAGEMENT
 # ==========================================================
-
 
 def create_customer(
-    db,
+    db: Session,
     payload: CustomerCreate,
 ):
     customer = Customer(
@@ -95,7 +42,7 @@ def create_customer(
 
 
 def get_customers(
-    db,
+    db: Session,
 ):
     return (
         db.query(Customer)
@@ -105,7 +52,7 @@ def get_customers(
 
 
 def get_customer(
-    db,
+    db: Session,
     customer_id: int,
 ):
     return (
@@ -118,26 +65,23 @@ def get_customer(
 
 
 def update_customer(
-    db,
+    db: Session,
     customer_id: int,
     payload: CustomerUpdate,
 ):
-    customer = (
-        db.query(Customer)
-        .filter(
-            Customer.id == customer_id
-        )
-        .first()
+    customer = get_customer(
+        db,
+        customer_id,
     )
 
     if customer is None:
         return None
 
-    updates = payload.model_dump(
+    update_data = payload.model_dump(
         exclude_unset=True
     )
 
-    for field, value in updates.items():
+    for field, value in update_data.items():
         setattr(
             customer,
             field,
@@ -151,15 +95,12 @@ def update_customer(
 
 
 def delete_customer(
-    db,
+    db: Session,
     customer_id: int,
 ):
-    customer = (
-        db.query(Customer)
-        .filter(
-            Customer.id == customer_id
-        )
-        .first()
+    customer = get_customer(
+        db,
+        customer_id,
     )
 
     if customer is None:
@@ -169,24 +110,19 @@ def delete_customer(
     db.commit()
 
     return customer
-from sqlalchemy.orm import Session
-
-from app.sales.models import SalesOrder
-from app.sales.schemas import (
-    SalesOrderCreate,
-    SalesOrderUpdate,
-)
 
 
 # ==========================================================
-# CREATE SALES ORDER
+# SALES ORDER MANAGEMENT
 # ==========================================================
 
 def create_sales_order(
     db: Session,
     payload: SalesOrderCreate,
 ):
-    total_amount = payload.quantity * payload.unit_price
+    total_amount = (
+        payload.quantity * payload.unit_price
+    )
 
     order = SalesOrder(
         order_number=payload.order_number,
@@ -206,11 +142,9 @@ def create_sales_order(
     return order
 
 
-# ==========================================================
-# GET ALL SALES ORDERS
-# ==========================================================
-
-def get_sales_orders(db: Session):
+def get_sales_orders(
+    db: Session,
+):
     return (
         db.query(SalesOrder)
         .order_by(SalesOrder.id.desc())
@@ -218,31 +152,28 @@ def get_sales_orders(db: Session):
     )
 
 
-# ==========================================================
-# GET ONE SALES ORDER
-# ==========================================================
-
 def get_sales_order(
     db: Session,
     order_id: int,
 ):
     return (
         db.query(SalesOrder)
-        .filter(SalesOrder.id == order_id)
+        .filter(
+            SalesOrder.id == order_id
+        )
         .first()
     )
 
-
-# ==========================================================
-# UPDATE SALES ORDER
-# ==========================================================
 
 def update_sales_order(
     db: Session,
     order_id: int,
     payload: SalesOrderUpdate,
 ):
-    order = get_sales_order(db, order_id)
+    order = get_sales_order(
+        db,
+        order_id,
+    )
 
     if order is None:
         return None
@@ -252,9 +183,14 @@ def update_sales_order(
     )
 
     for field, value in update_data.items():
-        setattr(order, field, value)
+        setattr(
+            order,
+            field,
+            value,
+        )
 
-    # Recalculate total if quantity or price changed
+    # Recalculate total amount whenever
+    # quantity or unit price changes.
     if (
         "quantity" in update_data
         or "unit_price" in update_data
@@ -269,15 +205,14 @@ def update_sales_order(
     return order
 
 
-# ==========================================================
-# DELETE SALES ORDER
-# ==========================================================
-
 def delete_sales_order(
     db: Session,
     order_id: int,
 ):
-    order = get_sales_order(db, order_id)
+    order = get_sales_order(
+        db,
+        order_id,
+    )
 
     if order is None:
         return None
@@ -286,22 +221,10 @@ def delete_sales_order(
     db.commit()
 
     return order
-from sqlalchemy.orm import Session
-
-from app.sales.models import RevenueAnalysis
-from app.sales.schemas import (
-    RevenueAnalysisCreate,
-    RevenueAnalysisUpdate,
-)
 
 
 # ==========================================================
-# REVENUE ANALYSIS SERVICE
-# ==========================================================
-
-
-# ==========================================================
-# CREATE
+# REVENUE ANALYSIS
 # ==========================================================
 
 def create_revenue_analysis(
@@ -324,23 +247,148 @@ def create_revenue_analysis(
     return analysis
 
 
-# ==========================================================
-# GET ALL
-# ==========================================================
-
 def get_revenue_analyses(
     db: Session,
 ):
-    return (
-        db.query(RevenueAnalysis)
-        .order_by(RevenueAnalysis.id.desc())
+    """
+    Dynamically calculates revenue analysis
+    from sales orders.
+
+    Revenue is grouped by month using the
+    sales order date.
+    """
+
+    sales_orders = (
+        db.query(SalesOrder)
+        .order_by(SalesOrder.order_date.asc())
         .all()
     )
 
+    if not sales_orders:
+        return []
 
-# ==========================================================
-# GET ONE
-# ==========================================================
+    monthly_data = defaultdict(
+        lambda: {
+            "total_orders": 0,
+            "total_units_sold": 0,
+            "total_revenue": 0.0,
+        }
+    )
+
+    # ------------------------------------------------------
+    # GROUP SALES ORDERS BY MONTH
+    # ------------------------------------------------------
+
+    for order in sales_orders:
+
+        order_date = (
+            order.order_date
+            or order.created_at
+            or datetime.utcnow()
+        )
+
+        period = order_date.strftime(
+            "%Y-%m"
+        )
+
+        monthly_data[period][
+            "total_orders"
+        ] += 1
+
+        monthly_data[period][
+            "total_units_sold"
+        ] += int(
+            order.quantity or 0
+        )
+
+        monthly_data[period][
+            "total_revenue"
+        ] += float(
+            order.total_amount or 0
+        )
+
+    # ------------------------------------------------------
+    # CALCULATE REVENUE ANALYSIS
+    # ------------------------------------------------------
+
+    chronological_periods = sorted(
+        monthly_data.keys()
+    )
+
+    calculated = []
+
+    previous_revenue = None
+
+    for index, period in enumerate(
+        chronological_periods
+    ):
+
+        data = monthly_data[period]
+
+        total_orders = data[
+            "total_orders"
+        ]
+
+        total_units_sold = data[
+            "total_units_sold"
+        ]
+
+        total_revenue = data[
+            "total_revenue"
+        ]
+
+        # Average Order Value
+        average_order_value = (
+            total_revenue / total_orders
+            if total_orders > 0
+            else 0.0
+        )
+
+        # Revenue Growth
+        revenue_growth_rate = 0.0
+
+        if (
+            previous_revenue is not None
+            and previous_revenue != 0
+        ):
+            revenue_growth_rate = (
+                (
+                    total_revenue
+                    - previous_revenue
+                )
+                / previous_revenue
+            ) * 100
+
+        calculated.append(
+            {
+                "id": index + 1,
+                "analysis_period": period,
+                "total_orders": total_orders,
+                "total_units_sold": total_units_sold,
+                "total_revenue": round(
+                    total_revenue,
+                    2,
+                ),
+                "average_order_value": round(
+                    average_order_value,
+                    2,
+                ),
+                "revenue_growth_rate": round(
+                    revenue_growth_rate,
+                    2,
+                ),
+                "created_at": None,
+                "updated_at": None,
+            }
+        )
+
+        previous_revenue = total_revenue
+
+    # Newest month first
+    calculated.reverse()
+
+    return calculated
+
 
 def get_revenue_analysis(
     db: Session,
@@ -354,10 +402,6 @@ def get_revenue_analysis(
         .first()
     )
 
-
-# ==========================================================
-# UPDATE
-# ==========================================================
 
 def update_revenue_analysis(
     db: Session,
@@ -389,10 +433,6 @@ def update_revenue_analysis(
     return analysis
 
 
-# ==========================================================
-# DELETE
-# ==========================================================
-
 def delete_revenue_analysis(
     db: Session,
     analysis_id: int,
@@ -409,13 +449,10 @@ def delete_revenue_analysis(
     db.commit()
 
     return analysis
-# ==========================================================
-# PROFIT MARGIN SERVICE
-# ==========================================================
 
 
 # ==========================================================
-# CREATE
+# PROFIT MARGIN
 # ==========================================================
 
 def create_profit_margin(
@@ -427,7 +464,9 @@ def create_profit_margin(
         total_revenue=payload.total_revenue,
         total_cost=payload.total_cost,
         gross_profit=payload.gross_profit,
-        profit_margin_percentage=payload.profit_margin_percentage,
+        profit_margin_percentage=(
+            payload.profit_margin_percentage
+        ),
     )
 
     db.add(analysis)
@@ -436,10 +475,6 @@ def create_profit_margin(
 
     return analysis
 
-
-# ==========================================================
-# GET ALL
-# ==========================================================
 
 def get_profit_margins(
     db: Session,
@@ -450,10 +485,6 @@ def get_profit_margins(
         .all()
     )
 
-
-# ==========================================================
-# GET ONE
-# ==========================================================
 
 def get_profit_margin(
     db: Session,
@@ -467,10 +498,6 @@ def get_profit_margin(
         .first()
     )
 
-
-# ==========================================================
-# UPDATE
-# ==========================================================
 
 def update_profit_margin(
     db: Session,
@@ -501,10 +528,6 @@ def update_profit_margin(
 
     return analysis
 
-
-# ==========================================================
-# DELETE
-# ==========================================================
 
 def delete_profit_margin(
     db: Session,
