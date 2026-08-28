@@ -23,6 +23,63 @@ from app.sales.schemas import (
 
 
 # ==========================================================
+# SALES DASHBOARD
+# ==========================================================
+
+def get_sales_dashboard(db: Session):
+    customers = (
+        db.query(Customer)
+        .order_by(Customer.id.desc())
+        .limit(5)
+        .all()
+    )
+
+    sales_orders = (
+        db.query(SalesOrder)
+        .order_by(SalesOrder.id.desc())
+        .limit(5)
+        .all()
+    )
+
+    revenue_analyses = get_revenue_analyses(db)
+
+    total_revenue = sum(
+        float(order.total_amount or 0)
+        for order in db.query(SalesOrder).all()
+    )
+
+    total_orders = (
+        db.query(SalesOrder).count()
+    )
+
+    monthly_revenue = 0.0
+
+    if revenue_analyses:
+        monthly_revenue = float(
+            revenue_analyses[0].get(
+                "total_revenue",
+                0,
+            )
+        )
+
+    return {
+        "customers": customers,
+        "sales_orders": sales_orders,
+        "revenue": {
+            "total_revenue": round(
+                total_revenue,
+                2,
+            ),
+            "monthly_revenue": round(
+                monthly_revenue,
+                2,
+            ),
+            "total_orders": total_orders,
+        },
+    }
+
+
+# ==========================================================
 # CUSTOMER MANAGEMENT
 # ==========================================================
 
@@ -113,7 +170,7 @@ def delete_customer(
 
 
 # ==========================================================
-# SALES ORDER MANAGEMENT
+# SALES ORDERS
 # ==========================================================
 
 def create_sales_order(
@@ -121,7 +178,8 @@ def create_sales_order(
     payload: SalesOrderCreate,
 ):
     total_amount = (
-        payload.quantity * payload.unit_price
+        payload.quantity
+        * payload.unit_price
     )
 
     order = SalesOrder(
@@ -189,14 +247,13 @@ def update_sales_order(
             value,
         )
 
-    # Recalculate total amount whenever
-    # quantity or unit price changes.
     if (
         "quantity" in update_data
         or "unit_price" in update_data
     ):
         order.total_amount = (
-            order.quantity * order.unit_price
+            order.quantity
+            * order.unit_price
         )
 
     db.commit()
@@ -236,8 +293,12 @@ def create_revenue_analysis(
         total_orders=payload.total_orders,
         total_units_sold=payload.total_units_sold,
         total_revenue=payload.total_revenue,
-        average_order_value=payload.average_order_value,
-        revenue_growth_rate=payload.revenue_growth_rate,
+        average_order_value=(
+            payload.average_order_value
+        ),
+        revenue_growth_rate=(
+            payload.revenue_growth_rate
+        ),
     )
 
     db.add(analysis)
@@ -250,17 +311,11 @@ def create_revenue_analysis(
 def get_revenue_analyses(
     db: Session,
 ):
-    """
-    Dynamically calculates revenue analysis
-    from sales orders.
-
-    Revenue is grouped by month using the
-    sales order date.
-    """
-
     sales_orders = (
         db.query(SalesOrder)
-        .order_by(SalesOrder.order_date.asc())
+        .order_by(
+            SalesOrder.order_date.asc()
+        )
         .all()
     )
 
@@ -274,10 +329,6 @@ def get_revenue_analyses(
             "total_revenue": 0.0,
         }
     )
-
-    # ------------------------------------------------------
-    # GROUP SALES ORDERS BY MONTH
-    # ------------------------------------------------------
 
     for order in sales_orders:
 
@@ -307,10 +358,6 @@ def get_revenue_analyses(
             order.total_amount or 0
         )
 
-    # ------------------------------------------------------
-    # CALCULATE REVENUE ANALYSIS
-    # ------------------------------------------------------
-
     chronological_periods = sorted(
         monthly_data.keys()
     )
@@ -337,14 +384,12 @@ def get_revenue_analyses(
             "total_revenue"
         ]
 
-        # Average Order Value
         average_order_value = (
             total_revenue / total_orders
             if total_orders > 0
             else 0.0
         )
 
-        # Revenue Growth
         revenue_growth_rate = 0.0
 
         if (
@@ -384,7 +429,6 @@ def get_revenue_analyses(
 
         previous_revenue = total_revenue
 
-    # Newest month first
     calculated.reverse()
 
     return calculated
@@ -394,6 +438,11 @@ def get_revenue_analysis(
     db: Session,
     analysis_id: int,
 ):
+    """
+    Gets a stored RevenueAnalysis record
+    by its database ID.
+    """
+
     return (
         db.query(RevenueAnalysis)
         .filter(
@@ -481,7 +530,9 @@ def get_profit_margins(
 ):
     return (
         db.query(ProfitMargin)
-        .order_by(ProfitMargin.id.desc())
+        .order_by(
+            ProfitMargin.id.desc()
+        )
         .all()
     )
 
