@@ -1,6 +1,4 @@
 from sqlalchemy.orm import Session
-from collections import defaultdict
-from datetime import datetime
 
 from app.sales.models import (
     Customer,
@@ -301,17 +299,6 @@ from app.sales.schemas import (
 # REVENUE ANALYSIS SERVICE
 # ==========================================================
 
-from collections import defaultdict
-from datetime import datetime
-
-from sqlalchemy.orm import Session
-
-from app.sales.models import RevenueAnalysis, SalesOrder
-from app.sales.schemas import (
-    RevenueAnalysisCreate,
-    RevenueAnalysisUpdate,
-)
-
 
 # ==========================================================
 # CREATE
@@ -339,286 +326,33 @@ def create_revenue_analysis(
 
 # ==========================================================
 # GET ALL
-# DYNAMICALLY CALCULATED FROM SALES ORDERS
 # ==========================================================
 
 def get_revenue_analyses(
     db: Session,
 ):
-    """
-    Dynamically calculates revenue analysis from sales orders.
-
-    This ensures that imported/new sales are automatically
-    reflected in Revenue Analysis.
-    """
-
-    sales_orders = (
-        db.query(SalesOrder)
-        .order_by(SalesOrder.order_date.asc())
+    return (
+        db.query(RevenueAnalysis)
+        .order_by(RevenueAnalysis.id.desc())
         .all()
     )
-
-    if not sales_orders:
-        return []
-
-    # ------------------------------------------------------
-    # GROUP SALES BY MONTH
-    # ------------------------------------------------------
-
-    monthly_data = defaultdict(
-        lambda: {
-            "total_orders": 0,
-            "total_units_sold": 0,
-            "total_revenue": 0.0,
-        }
-    )
-
-    for order in sales_orders:
-
-        order_date = (
-            order.order_date
-            or order.created_at
-            or datetime.utcnow()
-        )
-
-        period = order_date.strftime("%Y-%m")
-
-        monthly_data[period]["total_orders"] += 1
-
-        monthly_data[period]["total_units_sold"] += (
-            int(order.quantity or 0)
-        )
-
-        monthly_data[period]["total_revenue"] += (
-            float(order.total_amount or 0)
-        )
-
-    # ------------------------------------------------------
-    # SORT PERIODS
-    # ------------------------------------------------------
-
-    periods = sorted(
-        monthly_data.keys(),
-        reverse=True,
-    )
-
-    results = []
-
-    previous_revenue = None
-
-    # ------------------------------------------------------
-    # BUILD REVENUE ANALYSIS
-    # ------------------------------------------------------
-
-    for index, period in enumerate(periods):
-
-        data = monthly_data[period]
-
-        total_orders = data["total_orders"]
-
-        total_units_sold = data["total_units_sold"]
-
-        total_revenue = data["total_revenue"]
-
-        # --------------------------------------------------
-        # AVERAGE ORDER VALUE
-        # --------------------------------------------------
-
-        average_order_value = (
-            total_revenue / total_orders
-            if total_orders > 0
-            else 0.0
-        )
-
-        # --------------------------------------------------
-        # REVENUE GROWTH
-        # --------------------------------------------------
-
-        revenue_growth_rate = 0.0
-
-        if previous_revenue is not None:
-            if previous_revenue != 0:
-                revenue_growth_rate = (
-                    (
-                        total_revenue
-                        - previous_revenue
-                    )
-                    / previous_revenue
-                ) * 100
-
-        # --------------------------------------------------
-        # CREATE RESPONSE
-        # --------------------------------------------------
-
-        results.append(
-            {
-                "id": index + 1,
-                "analysis_period": period,
-                "total_orders": total_orders,
-                "total_units_sold": total_units_sold,
-                "total_revenue": round(
-                    total_revenue,
-                    2,
-                ),
-                "average_order_value": round(
-                    average_order_value,
-                    2,
-                ),
-                "revenue_growth_rate": round(
-                    revenue_growth_rate,
-                    2,
-                ),
-                "created_at": None,
-                "updated_at": None,
-            }
-        )
-
-        previous_revenue = total_revenue
-
-    return results
 
 
 # ==========================================================
 # GET ONE
 # ==========================================================
 
-def get_revenue_analyses(
+def get_revenue_analysis(
     db: Session,
+    analysis_id: int,
 ):
-    """
-    Dynamically calculates revenue analysis
-    directly from sales orders.
-    """
-
-    sales_orders = (
-        db.query(SalesOrder)
-        .order_by(SalesOrder.order_date.asc())
-        .all()
+    return (
+        db.query(RevenueAnalysis)
+        .filter(
+            RevenueAnalysis.id == analysis_id
+        )
+        .first()
     )
-
-    if not sales_orders:
-        return []
-
-    # ------------------------------------------------------
-    # GROUP SALES BY MONTH
-    # ------------------------------------------------------
-
-    monthly_data = defaultdict(
-        lambda: {
-            "total_orders": 0,
-            "total_units_sold": 0,
-            "total_revenue": 0.0,
-        }
-    )
-
-    for order in sales_orders:
-
-        order_date = (
-            order.order_date
-            or order.created_at
-            or datetime.utcnow()
-        )
-
-        period = order_date.strftime("%Y-%m")
-
-        monthly_data[period]["total_orders"] += 1
-
-        monthly_data[period]["total_units_sold"] += (
-            int(order.quantity or 0)
-        )
-
-        monthly_data[period]["total_revenue"] += (
-            float(order.total_amount or 0)
-        )
-
-    # ------------------------------------------------------
-    # CALCULATE GROWTH CHRONOLOGICALLY
-    # ------------------------------------------------------
-
-    chronological_periods = sorted(
-        monthly_data.keys()
-    )
-
-    calculated = []
-
-    previous_revenue = None
-
-    for index, period in enumerate(
-        chronological_periods
-    ):
-
-        data = monthly_data[period]
-
-        total_orders = data["total_orders"]
-
-        total_units_sold = data["total_units_sold"]
-
-        total_revenue = data["total_revenue"]
-
-        # --------------------------------------------------
-        # AVERAGE ORDER VALUE
-        # --------------------------------------------------
-
-        average_order_value = (
-            total_revenue / total_orders
-            if total_orders > 0
-            else 0.0
-        )
-
-        # --------------------------------------------------
-        # REVENUE GROWTH
-        # --------------------------------------------------
-
-        revenue_growth_rate = 0.0
-
-        if (
-            previous_revenue is not None
-            and previous_revenue != 0
-        ):
-            revenue_growth_rate = (
-                (
-                    total_revenue
-                    - previous_revenue
-                )
-                / previous_revenue
-            ) * 100
-
-        # --------------------------------------------------
-        # CREATE RESULT
-        # --------------------------------------------------
-
-        calculated.append(
-            {
-                "id": index + 1,
-                "analysis_period": period,
-                "total_orders": total_orders,
-                "total_units_sold": total_units_sold,
-                "total_revenue": round(
-                    total_revenue,
-                    2,
-                ),
-                "average_order_value": round(
-                    average_order_value,
-                    2,
-                ),
-                "revenue_growth_rate": round(
-                    revenue_growth_rate,
-                    2,
-                ),
-                "created_at": None,
-                "updated_at": None,
-            }
-        )
-
-        previous_revenue = total_revenue
-
-    # ------------------------------------------------------
-    # NEWEST PERIOD FIRST
-    # ------------------------------------------------------
-
-    calculated.reverse()
-
-    return calculated
 
 
 # ==========================================================
@@ -630,12 +364,9 @@ def update_revenue_analysis(
     analysis_id: int,
     payload: RevenueAnalysisUpdate,
 ):
-    analysis = (
-        db.query(RevenueAnalysis)
-        .filter(
-            RevenueAnalysis.id == analysis_id
-        )
-        .first()
+    analysis = get_revenue_analysis(
+        db,
+        analysis_id,
     )
 
     if analysis is None:
@@ -666,12 +397,9 @@ def delete_revenue_analysis(
     db: Session,
     analysis_id: int,
 ):
-    analysis = (
-        db.query(RevenueAnalysis)
-        .filter(
-            RevenueAnalysis.id == analysis_id
-        )
-        .first()
+    analysis = get_revenue_analysis(
+        db,
+        analysis_id,
     )
 
     if analysis is None:
