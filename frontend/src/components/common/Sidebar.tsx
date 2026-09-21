@@ -1,5 +1,19 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
+
 import { NavLink, useLocation } from "react-router-dom";
+
+/* ==========================================================
+   RESPONSIVE SIDEBAR EVENTS
+========================================================== */
+
+const SIDEBAR_TOGGLE_EVENT = "smartchain:sidebar-toggle";
+const SIDEBAR_CLOSE_EVENT = "smartchain:sidebar-close";
 
 /* ==========================================================
    ICON COMPONENT
@@ -47,7 +61,7 @@ const Icon = ({
       "M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z",
 
     settings:
-      "M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L8 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L7.4 8.6 9.1 7l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6v-.2h2.4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.6 1Z",
+      "M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L8 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L7.4 8.6 9.1 7l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6v-.2h2.4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.6 1Z",
 
     user:
       "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0",
@@ -60,9 +74,6 @@ const Icon = ({
 
     close:
       "M6 6l12 12M18 6 6 18",
-
-    profile:
-      "M20 21a8 8 0 0 0-16 0M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
   };
 
   return (
@@ -89,17 +100,51 @@ const Icon = ({
 export default function Sidebar() {
   const location = useLocation();
 
-  const [executiveOpen, setExecutiveOpen] = useState(false);
-  const [procurementOpen, setProcurementOpen] = useState(false);
-  const [inventoryOpen, setInventoryOpen] = useState(false);
-  const [warehouseOpen, setWarehouseOpen] = useState(false);
-  const [logisticsOpen, setLogisticsOpen] = useState(false);
-  const [salesOpen, setSalesOpen] = useState(false);
-  const [dataScienceOpen, setDataScienceOpen] = useState(false);
-  const [businessIntelOpen, setBusinessIntelOpen] = useState(false);
-  const [aiOpen, setAiOpen] = useState(false);
-  const [leanOpen, setLeanOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [executiveOpen, setExecutiveOpen] =
+    useState(false);
+
+  const [procurementOpen, setProcurementOpen] =
+    useState(false);
+
+  const [inventoryOpen, setInventoryOpen] =
+    useState(false);
+
+  const [warehouseOpen, setWarehouseOpen] =
+    useState(false);
+
+  const [logisticsOpen, setLogisticsOpen] =
+    useState(false);
+
+  const [salesOpen, setSalesOpen] =
+    useState(false);
+
+  const [dataScienceOpen, setDataScienceOpen] =
+    useState(false);
+
+  const [businessIntelOpen, setBusinessIntelOpen] =
+    useState(false);
+
+  const [aiOpen, setAiOpen] =
+    useState(false);
+
+  const [leanOpen, setLeanOpen] =
+    useState(false);
+
+  const [settingsOpen, setSettingsOpen] =
+    useState(false);
+
+  /* ========================================================
+     RESPONSIVE SIDEBAR STATE
+  ======================================================== */
+
+  const [collapsed, setCollapsed] =
+    useState(false);
+
+  const [mobileOpen, setMobileOpen] =
+    useState(false);
+
+  const [isMobile, setIsMobile] =
+    useState(false);
 
   /* ==========================================================
      ROUTE GROUPS
@@ -215,10 +260,13 @@ export default function Sidebar() {
     return path.replace(/\/+$/, "");
   };
 
-  const currentPath = normalizePath(location.pathname);
+  const currentPath = normalizePath(
+    location.pathname
+  );
 
   const routeIsActive = (route: string) => {
-    const normalizedRoute = normalizePath(route);
+    const normalizedRoute =
+      normalizePath(route);
 
     if (normalizedRoute === "/") {
       return currentPath === "/";
@@ -226,86 +274,295 @@ export default function Sidebar() {
 
     return (
       currentPath === normalizedRoute ||
-      currentPath.startsWith(`${normalizedRoute}/`)
+      currentPath.startsWith(
+        `${normalizedRoute}/`
+      )
     );
   };
 
-  const sectionIsActive = (routes: string[]) =>
-    routes.some((route) => routeIsActive(route));
+  const sectionIsActive = (
+    routes: string[]
+  ) =>
+    routes.some((route) =>
+      routeIsActive(route)
+    );
 
   /* ==========================================================
-     AUTO OPEN CURRENT SECTION
-     
-     IMPORTANT:
-     The sidebar now follows the current URL automatically.
-     Only the section containing the current page is opened.
+     RESPONSIVE BREAKPOINTS
   ========================================================== */
 
   useEffect(() => {
-    setExecutiveOpen(sectionIsActive(executiveRoutes));
-    setProcurementOpen(sectionIsActive(procurementRoutes));
-    setInventoryOpen(sectionIsActive(inventoryRoutes));
-    setWarehouseOpen(sectionIsActive(warehouseRoutes));
-    setLogisticsOpen(sectionIsActive(logisticsRoutes));
-    setSalesOpen(sectionIsActive(salesRoutes));
-    setDataScienceOpen(sectionIsActive(dataScienceRoutes));
-    setBusinessIntelOpen(sectionIsActive(businessIntelRoutes));
-    setAiOpen(sectionIsActive(aiRoutes));
-    setLeanOpen(sectionIsActive(leanRoutes));
-    setSettingsOpen(sectionIsActive(settingsRoutes));
+    const handleResize = () => {
+      const mobile =
+        window.innerWidth <= 768;
+
+      const tabletOrSmallDesktop =
+        window.innerWidth <= 1100;
+
+      setIsMobile(mobile);
+
+      if (mobile) {
+        setMobileOpen(false);
+      } else {
+        setCollapsed(
+          tabletOrSmallDesktop
+        );
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () => {
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+    };
+  }, []);
+
+  /* ==========================================================
+     HEADER SIDEBAR EVENTS
+  ========================================================== */
+
+  useEffect(() => {
+    const handleToggle = () => {
+      if (window.innerWidth <= 768) {
+        setMobileOpen(
+          (previous) => !previous
+        );
+      } else {
+        setCollapsed(
+          (previous) => !previous
+        );
+      }
+    };
+
+    const handleClose = () => {
+      setMobileOpen(false);
+    };
+
+    window.addEventListener(
+      SIDEBAR_TOGGLE_EVENT,
+      handleToggle
+    );
+
+    window.addEventListener(
+      SIDEBAR_CLOSE_EVENT,
+      handleClose
+    );
+
+    return () => {
+      window.removeEventListener(
+        SIDEBAR_TOGGLE_EVENT,
+        handleToggle
+      );
+
+      window.removeEventListener(
+        SIDEBAR_CLOSE_EVENT,
+        handleClose
+      );
+    };
+  }, []);
+
+  /* ==========================================================
+     AUTO OPEN CURRENT SECTION
+  ========================================================== */
+
+  useEffect(() => {
+    setExecutiveOpen(
+      sectionIsActive(executiveRoutes)
+    );
+
+    setProcurementOpen(
+      sectionIsActive(procurementRoutes)
+    );
+
+    setInventoryOpen(
+      sectionIsActive(inventoryRoutes)
+    );
+
+    setWarehouseOpen(
+      sectionIsActive(warehouseRoutes)
+    );
+
+    setLogisticsOpen(
+      sectionIsActive(logisticsRoutes)
+    );
+
+    setSalesOpen(
+      sectionIsActive(salesRoutes)
+    );
+
+    setDataScienceOpen(
+      sectionIsActive(dataScienceRoutes)
+    );
+
+    setBusinessIntelOpen(
+      sectionIsActive(
+        businessIntelRoutes
+      )
+    );
+
+    setAiOpen(
+      sectionIsActive(aiRoutes)
+    );
+
+    setLeanOpen(
+      sectionIsActive(leanRoutes)
+    );
+
+    setSettingsOpen(
+      sectionIsActive(settingsRoutes)
+    );
+
+    if (isMobile) {
+      setMobileOpen(false);
+    }
   }, [location.pathname]);
+
+  /* ==========================================================
+     CLOSE MOBILE SIDEBAR
+  ========================================================== */
+
+  const closeMobileSidebar = () => {
+    if (isMobile) {
+      setMobileOpen(false);
+    }
+  };
 
   /* ==========================================================
      STYLES
   ========================================================== */
 
+  const sidebarWidth =
+    isMobile
+      ? "280px"
+      : collapsed
+      ? "76px"
+      : "280px";
+
   const sidebarStyle = {
-    width: "280px",
-    minWidth: "280px",
+    width: sidebarWidth,
+    minWidth: isMobile
+      ? "280px"
+      : collapsed
+      ? "76px"
+      : "280px",
+
     height: "100vh",
-    position: "sticky" as const,
+
+    position: isMobile
+      ? ("fixed" as const)
+      : ("sticky" as const),
+
     top: 0,
     left: 0,
+
+    transform:
+      isMobile && !mobileOpen
+        ? "translateX(-105%)"
+        : "translateX(0)",
+
     flexShrink: 0,
+
     background:
       "linear-gradient(180deg, #06152F 0%, #081B3A 45%, #07152F 100%)",
+
     color: "#FFFFFF",
+
     display: "flex",
     flexDirection: "column" as const,
+
     boxSizing: "border-box" as const,
-    borderRight: "1px solid rgba(148, 163, 184, 0.10)",
+
+    borderRight:
+      "1px solid rgba(148, 163, 184, 0.10)",
+
     overflow: "hidden",
+
     zIndex: 1000,
+
+    transition:
+      "width 0.25s ease, min-width 0.25s ease, transform 0.25s ease",
+
+    boxShadow: isMobile
+      ? "12px 0 35px rgba(2,6,23,.35)"
+      : "none",
   };
 
   const logoAreaStyle = {
     height: "96px",
     minHeight: "96px",
+
     display: "flex",
     alignItems: "center",
-    padding: "0 24px",
+
+    justifyContent:
+      collapsed && !isMobile
+        ? "center"
+        : "flex-start",
+
+    padding:
+      collapsed && !isMobile
+        ? "0"
+        : "0 24px",
+
     boxSizing: "border-box" as const,
-    borderBottom: "1px solid rgba(148, 163, 184, 0.08)",
+
+    borderBottom:
+      "1px solid rgba(148, 163, 184, 0.08)",
+
+    transition:
+      "padding 0.25s ease",
   };
 
   const logoBoxStyle = {
     width: "38px",
     height: "38px",
+    minWidth: "38px",
+
     borderRadius: "10px",
-    background: "linear-gradient(135deg, #2563EB, #3B82F6)",
+
+    background:
+      "linear-gradient(135deg, #2563EB, #3B82F6)",
+
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: "12px",
-    boxShadow: "0 8px 20px rgba(37, 99, 235, 0.30)",
+
+    marginRight:
+      collapsed && !isMobile
+        ? "0"
+        : "12px",
+
+    boxShadow:
+      "0 8px 20px rgba(37, 99, 235, 0.30)",
+
     flexShrink: 0,
+
+    transition:
+      "margin 0.25s ease",
   };
 
   const menuContainerStyle = {
     flex: 1,
+
     overflowY: "auto" as const,
-    padding: "18px 15px 15px",
+
+    padding:
+      collapsed && !isMobile
+        ? "18px 8px 15px"
+        : "18px 15px 15px",
+
     boxSizing: "border-box" as const,
+
+    transition:
+      "padding 0.25s ease",
   };
 
   const sectionLabelStyle = {
@@ -313,8 +570,16 @@ export default function Sidebar() {
     fontSize: "10px",
     fontWeight: 800,
     letterSpacing: "1.4px",
+
     padding: "10px 13px 8px",
-    textTransform: "uppercase" as const,
+
+    textTransform:
+      "uppercase" as const,
+
+    display:
+      collapsed && !isMobile
+        ? "none"
+        : "block",
   };
 
   /* ==========================================================
@@ -327,53 +592,97 @@ export default function Sidebar() {
   ) => ({
     width: "100%",
     minHeight: "46px",
+
     boxSizing: "border-box" as const,
-    color: active || open ? "#FFFFFF" : "#CBD5E1",
+
+    color:
+      active || open
+        ? "#FFFFFF"
+        : "#CBD5E1",
+
     background: active
       ? "linear-gradient(90deg, #1558C7 0%, #1D4ED8 100%)"
       : open
       ? "rgba(37, 99, 235, 0.10)"
       : "transparent",
+
     textDecoration: "none",
-    padding: "11px 13px",
+
+    padding:
+      collapsed && !isMobile
+        ? "11px 0"
+        : "11px 13px",
+
     display: "flex",
     alignItems: "center",
+
+    justifyContent:
+      collapsed && !isMobile
+        ? "center"
+        : "flex-start",
+
     gap: "12px",
+
     borderRadius: "9px",
     marginBottom: "4px",
+
     cursor: "pointer",
+
     whiteSpace: "nowrap" as const,
 
     fontSize: "15px",
 
     fontWeight: active ? 700 : 550,
-    transition: "all 0.2s ease",
-    border: "1px solid transparent",
+
+    transition:
+      "all 0.2s ease",
+
+    border:
+      "1px solid transparent",
+
     boxShadow: active
       ? "0 6px 16px rgba(37, 99, 235, 0.24)"
       : "none",
   });
 
-  const submenuStyle = (active: boolean) => ({
+  const submenuStyle = (
+    active: boolean
+  ) => ({
     position: "relative" as const,
-    color: active ? "#FFFFFF" : "#94A3B8",
+
+    color: active
+      ? "#FFFFFF"
+      : "#94A3B8",
+
     background: active
       ? "rgba(37, 99, 235, 0.20)"
       : "transparent",
+
     textDecoration: "none",
+
     padding: "9px 12px 9px 52px",
+
     display: "flex",
     alignItems: "center",
+
     minHeight: "38px",
+
     boxSizing: "border-box" as const,
+
     borderRadius: "7px",
+
     marginBottom: "2px",
 
     fontSize: "14px",
 
-    fontWeight: active ? 650 : 500,
+    fontWeight: active
+      ? 650
+      : 500,
+
     whiteSpace: "nowrap" as const,
-    transition: "all 0.2s ease",
+
+    transition:
+      "all 0.2s ease",
   });
 
   /* ==========================================================
@@ -391,53 +700,122 @@ export default function Sidebar() {
     title: string;
     icon: string;
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: Dispatch<
+      SetStateAction<boolean>
+    >;
     routes: string[];
-    children: React.ReactNode;
+    children: ReactNode;
   }) => {
-    const active = sectionIsActive(routes);
+    const active =
+      sectionIsActive(routes);
 
     return (
-      <div style={{ marginBottom: "3px" }}>
+      <div
+        style={{
+          marginBottom: "3px",
+        }}
+      >
         <button
           type="button"
-          onClick={() => setOpen((current) => !current)}
+          onClick={() => {
+            if (
+              collapsed &&
+              !isMobile
+            ) {
+              setCollapsed(false);
+              setOpen(true);
+              return;
+            }
+
+            setOpen(
+              (current) => !current
+            );
+          }}
+          title={
+            collapsed &&
+            !isMobile
+              ? title
+              : undefined
+          }
           style={{
-            ...menuItemStyle(active, open),
+            ...menuItemStyle(
+              active,
+              open
+            ),
+
             border: "none",
+
             fontFamily: "inherit",
-            textAlign: "left" as const,
+
+            textAlign:
+              "left" as const,
           }}
         >
           <span
             style={{
               width: "20px",
               height: "20px",
+
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: active || open ? "#FFFFFF" : "#94A3B8",
+
+              color:
+                active || open
+                  ? "#FFFFFF"
+                  : "#94A3B8",
+
               flexShrink: 0,
             }}
           >
-            <Icon type={icon} size={19} />
+            <Icon
+              type={icon}
+              size={19}
+            />
           </span>
 
-          <span style={{ flex: 1 }}>{title}</span>
+          <span
+            style={{
+              flex: 1,
+
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "block",
+            }}
+          >
+            {title}
+          </span>
 
           <span
             style={{
               width: "18px",
               height: "18px",
-              display: "flex",
+
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "flex",
+
               alignItems: "center",
               justifyContent: "center",
-              transform: open ? "rotate(90deg)" : "rotate(0deg)",
-              transition: "transform 0.2s ease",
+
+              transform: open
+                ? "rotate(90deg)"
+                : "rotate(0deg)",
+
+              transition:
+                "transform 0.2s ease",
+
               color: "#94A3B8",
             }}
           >
-            <Icon type="chevron" size={15} />
+            <Icon
+              type="chevron"
+              size={15}
+            />
           </span>
         </button>
 
@@ -446,8 +824,17 @@ export default function Sidebar() {
             style={{
               marginLeft: "10px",
               paddingLeft: "9px",
-              borderLeft: "1px solid rgba(148, 163, 184, 0.16)",
+
+              borderLeft:
+                "1px solid rgba(148, 163, 184, 0.16)",
+
               marginBottom: "7px",
+
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "block",
             }}
           >
             {children}
@@ -473,10 +860,21 @@ export default function Sidebar() {
     <NavLink
       to={to}
       end={to === "/"}
-      style={() => menuItemStyle(routeIsActive(to))}
+      onClick={closeMobileSidebar}
+      title={
+        collapsed && !isMobile
+          ? title
+          : undefined
+      }
+      style={() =>
+        menuItemStyle(
+          routeIsActive(to)
+        )
+      }
     >
       {() => {
-        const isActive = routeIsActive(to);
+        const isActive =
+          routeIsActive(to);
 
         return (
           <>
@@ -484,26 +882,57 @@ export default function Sidebar() {
               style={{
                 width: "20px",
                 height: "20px",
+
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: isActive ? "#FFFFFF" : "#94A3B8",
+
+                color: isActive
+                  ? "#FFFFFF"
+                  : "#94A3B8",
+
                 flexShrink: 0,
               }}
             >
-              <Icon type={icon} size={19} />
+              <Icon
+                type={icon}
+                size={19}
+              />
             </span>
 
-            <span style={{ flex: 1 }}>{title}</span>
+            <span
+              style={{
+                flex: 1,
+
+                display:
+                  collapsed &&
+                  !isMobile
+                    ? "none"
+                    : "block",
+              }}
+            >
+              {title}
+            </span>
 
             {isActive && (
               <span
                 style={{
                   width: "6px",
                   height: "6px",
+
                   borderRadius: "50%",
-                  background: "#60A5FA",
-                  boxShadow: "0 0 8px rgba(96,165,250,.8)",
+
+                  background:
+                    "#60A5FA",
+
+                  boxShadow:
+                    "0 0 8px rgba(96,165,250,.8)",
+
+                  display:
+                    collapsed &&
+                    !isMobile
+                      ? "none"
+                      : "block",
                 }}
               />
             )}
@@ -526,23 +955,37 @@ export default function Sidebar() {
   }) => (
     <NavLink
       to={to}
-      style={() => submenuStyle(routeIsActive(to))}
+      onClick={closeMobileSidebar}
+      style={() =>
+        submenuStyle(
+          routeIsActive(to)
+        )
+      }
     >
       {() => {
-        const isActive = routeIsActive(to);
+        const isActive =
+          routeIsActive(to);
 
         return (
           <>
             {isActive && (
               <span
                 style={{
-                  position: "absolute",
+                  position:
+                    "absolute",
+
                   left: "-10px",
+
                   width: "5px",
                   height: "22px",
+
                   borderRadius: "4px",
-                  background: "#3B82F6",
-                  boxShadow: "0 0 10px rgba(59,130,246,.65)",
+
+                  background:
+                    "#3B82F6",
+
+                  boxShadow:
+                    "0 0 10px rgba(59,130,246,.65)",
                 }}
               />
             )}
@@ -551,14 +994,22 @@ export default function Sidebar() {
               style={{
                 width: "6px",
                 height: "6px",
+
                 borderRadius: "50%",
-                background: isActive ? "#3B82F6" : "#475569",
+
+                background: isActive
+                  ? "#3B82F6"
+                  : "#475569",
+
                 marginRight: "2px",
+
                 flexShrink: 0,
               }}
             />
 
-            <span>{title}</span>
+            <span>
+              {title}
+            </span>
           </>
         );
       }}
@@ -570,698 +1021,949 @@ export default function Sidebar() {
   ========================================================== */
 
   return (
-    <aside style={sidebarStyle}>
+    <>
       {/* ======================================================
-          BRAND
+          MOBILE BACKDROP
       ====================================================== */}
 
-      <div style={logoAreaStyle}>
-        <div style={logoBoxStyle}>
+      {isMobile &&
+        mobileOpen && (
           <div
+            onClick={() =>
+              setMobileOpen(false)
+            }
             style={{
-              width: "18px",
-              height: "18px",
-              border: "3px solid #FFFFFF",
-              borderRadius: "4px",
-              transform: "rotate(45deg)",
-              opacity: 0.95,
-            }}
-          />
-        </div>
+              position: "fixed",
+              inset: 0,
 
-        <div>
-          <div
-            style={{
-              fontSize: "17px",
-              fontWeight: 800,
-              letterSpacing: "-0.4px",
-              lineHeight: 1.1,
-            }}
-          >
-            SmartChain{" "}
-            <span style={{ color: "#3B82F6" }}>Nexus</span>
-          </div>
-
-          <div
-            style={{
-              color: "#64748B",
-              fontSize: "9px",
-              marginTop: "5px",
-              letterSpacing: "0.35px",
-              fontWeight: 600,
-            }}
-          >
-            SUPPLY CHAIN INTELLIGENCE
-          </div>
-        </div>
-      </div>
-
-      {/* ======================================================
-          NAVIGATION
-      ====================================================== */}
-
-      <div
-        style={{
-          ...menuContainerStyle,
-          scrollbarWidth: "thin",
-          scrollbarColor: "#1E3A67 transparent",
-        }}
-      >
-        <div style={sectionLabelStyle}>Main Navigation</div>
-
-        <SimpleNav
-          to="/"
-          title="Dashboard"
-          icon="home"
-        />
-
-        {/* ====================================================
-            EXECUTIVE INTELLIGENCE
-        ==================================================== */}
-
-        <Section
-          title="Executive Intelligence"
-          icon="executive"
-          open={executiveOpen}
-          setOpen={setExecutiveOpen}
-          routes={executiveRoutes}
-        >
-          <SubNav
-            to="/executive-dashboard"
-            title="CEO Dashboard"
-          />
-
-          <SubNav
-            to="/business-kpis"
-            title="Business KPIs"
-          />
-
-          <SubNav
-            to="/financial-overview"
-            title="Financial Overview"
-          />
-
-          <SubNav
-            to="/operational-performance"
-            title="Operational Performance"
-          />
-
-          <SubNav
-            to="/risk-monitoring"
-            title="Risk Monitoring"
-          />
-        </Section>
-
-        {/* ====================================================
-            PROCUREMENT
-        ==================================================== */}
-
-        <Section
-          title="Procurement"
-          icon="procurement"
-          open={procurementOpen}
-          setOpen={setProcurementOpen}
-          routes={procurementRoutes}
-        >
-          <SubNav
-            to="/suppliers"
-            title="Supplier Management"
-          />
-
-          <SubNav
-            to="/purchase-orders"
-            title="Purchase Orders"
-          />
-
-          <SubNav
-            to="/spend-analytics"
-            title="Spend Analytics"
-          />
-
-          <SubNav
-            to="/vendor-performance"
-            title="Vendor Performance"
-          />
-
-          <SubNav
-            to="/lead-time-analysis"
-            title="Lead Time Analysis"
-          />
-        </Section>
-
-        {/* ====================================================
-            INVENTORY
-        ==================================================== */}
-
-        <Section
-          title="Inventory"
-          icon="inventory"
-          open={inventoryOpen}
-          setOpen={setInventoryOpen}
-          routes={inventoryRoutes}
-        >
-          <SubNav
-            to="/inventory"
-            title="Stock Monitoring"
-          />
-
-          <SubNav
-            to="/inventory-transactions"
-            title="Inventory Transactions"
-          />
-
-          <SubNav
-            to="/inventory-adjustments"
-            title="Inventory Adjustments"
-          />
-
-          <SubNav
-            to="/abc-analysis"
-            title="ABC Analysis"
-          />
-
-          <SubNav
-            to="/xyz-analysis"
-            title="XYZ Analysis"
-          />
-
-          <SubNav
-            to="/eoq"
-            title="EOQ"
-          />
-
-          <SubNav
-            to="/safety-stock"
-            title="Safety Stock"
-          />
-
-          <SubNav
-            to="/reorder-point"
-            title="Reorder Point"
-          />
-
-          <SubNav
-            to="/inventory-turnover"
-            title="Inventory Turnover"
-          />
-        </Section>
-
-        {/* ====================================================
-            WAREHOUSE
-        ==================================================== */}
-
-        <Section
-          title="Warehouse"
-          icon="warehouse"
-          open={warehouseOpen}
-          setOpen={setWarehouseOpen}
-          routes={warehouseRoutes}
-        >
-          <SubNav
-            to="/receiving"
-            title="Receiving"
-          />
-
-          <SubNav
-            to="/picking"
-            title="Picking"
-          />
-
-          <SubNav
-            to="/packing"
-            title="Packing"
-          />
-
-          <SubNav
-            to="/dispatch"
-            title="Dispatch"
-          />
-
-          <SubNav
-            to="/cycle-counts"
-            title="Cycle Counts"
-          />
-
-          <SubNav
-            to="/warehouse-performance"
-            title="Warehouse Performance"
-          />
-        </Section>
-
-        {/* ====================================================
-            LOGISTICS
-        ==================================================== */}
-
-        <Section
-          title="Logistics"
-          icon="logistics"
-          open={logisticsOpen}
-          setOpen={setLogisticsOpen}
-          routes={logisticsRoutes}
-        >
-          <SubNav
-            to="/fleet-performance"
-            title="Fleet Performance"
-          />
-
-          <SubNav
-            to="/route-optimization"
-            title="Route Optimization"
-          />
-
-          <SubNav
-            to="/delivery-tracking"
-            title="Delivery Tracking"
-          />
-
-          <SubNav
-            to="/fuel-analysis"
-            title="Fuel Analysis"
-          />
-
-          <SubNav
-            to="/distribution-analytics"
-            title="Distribution Analytics"
-          />
-        </Section>
-
-        {/* ====================================================
-            SALES
-        ==================================================== */}
-
-        <Section
-          title="Sales"
-          icon="sales"
-          open={salesOpen}
-          setOpen={setSalesOpen}
-          routes={salesRoutes}
-        >
-          <SubNav
-            to="/customers"
-            title="Customer Management"
-          />
-
-          <SubNav
-            to="/sales-orders"
-            title="Sales Orders"
-          />
-
-          <SubNav
-            to="/revenue-analysis"
-            title="Revenue Analysis"
-          />
-
-          <SubNav
-            to="/profit-margin"
-            title="Profit Margin"
-          />
-        </Section>
-
-        <div
-          style={{
-            height: "1px",
-            background: "rgba(148,163,184,.08)",
-            margin: "14px 8px",
-          }}
-        />
-
-        <div style={sectionLabelStyle}>
-          Intelligence & Analytics
-        </div>
-
-        {/* ====================================================
-            DATA SCIENCE
-        ==================================================== */}
-
-        <Section
-          title="Data Science"
-          icon="data"
-          open={dataScienceOpen}
-          setOpen={setDataScienceOpen}
-          routes={dataScienceRoutes}
-        >
-          <SubNav
-            to="/demand-forecasting"
-            title="Demand Forecasting"
-          />
-
-          <SubNav
-            to="/sales-prediction"
-            title="Sales Prediction"
-          />
-
-          <SubNav
-            to="/supplier-risk-prediction"
-            title="Supplier Risk Prediction"
-          />
-
-          <SubNav
-            to="/customer-segmentation"
-            title="Customer Segmentation"
-          />
-
-          <SubNav
-            to="/inventory-optimization"
-            title="Inventory Optimization"
-          />
-
-          <SubNav
-            to="/anomaly-detection"
-            title="Anomaly Detection"
-          />
-        </Section>
-
-        {/* ====================================================
-            BUSINESS INTELLIGENCE
-        ==================================================== */}
-
-        <Section
-          title="Business Intelligence"
-          icon="business"
-          open={businessIntelOpen}
-          setOpen={setBusinessIntelOpen}
-          routes={businessIntelRoutes}
-        >
-          <SubNav
-            to="/power-bi-dashboards"
-            title="Power BI Dashboards"
-          />
-
-          <SubNav
-            to="/executive-reporting"
-            title="Executive Reporting"
-          />
-
-          <SubNav
-            to="/operational-analytics"
-            title="Operational Analytics"
-          />
-
-          <SubNav
-            to="/interactive-kpi-monitoring"
-            title="Interactive KPI Monitoring"
-          />
-        </Section>
-
-        {/* ====================================================
-            ARTIFICIAL INTELLIGENCE
-        ==================================================== */}
-
-        <Section
-          title="Artificial Intelligence"
-          icon="ai"
-          open={aiOpen}
-          setOpen={setAiOpen}
-          routes={aiRoutes}
-        >
-          <SubNav
-            to="/ai-supply-chain-assistant"
-            title="AI Supply Chain Assistant"
-          />
-
-          <SubNav
-            to="/predictive-analytics"
-            title="Predictive Analytics"
-          />
-
-          <SubNav
-            to="/intelligent-recommendations"
-            title="Intelligent Recommendations"
-          />
-
-          <SubNav
-            to="/natural-language-queries"
-            title="Natural Language Queries"
-          />
-        </Section>
-
-        <div
-          style={{
-            height: "1px",
-            background: "rgba(148,163,184,.08)",
-            margin: "14px 8px",
-          }}
-        />
-
-        <div style={sectionLabelStyle}>
-          Process Excellence
-        </div>
-
-        {/* ====================================================
-            LEAN SIX SIGMA
-        ==================================================== */}
-
-        <Section
-          title="Lean Six Sigma"
-          icon="lean"
-          open={leanOpen}
-          setOpen={setLeanOpen}
-          routes={leanRoutes}
-        >
-          <SubNav
-            to="/dmaic"
-            title="DMAIC"
-          />
-
-          <SubNav
-            to="/sipoc"
-            title="SIPOC"
-          />
-
-          <SubNav
-            to="/fishbone-analysis"
-            title="Fishbone Analysis"
-          />
-
-          <SubNav
-            to="/pareto-analysis"
-            title="Pareto Analysis"
-          />
-
-          <SubNav
-            to="/fmea"
-            title="FMEA"
-          />
-
-          <SubNav
-            to="/control-charts"
-            title="Control Charts"
-          />
-
-          <SubNav
-            to="/root-cause-analysis"
-            title="Root Cause Analysis"
-          />
-        </Section>
-
-        <div
-          style={{
-            height: "1px",
-            background: "rgba(148,163,184,.08)",
-            margin: "14px 8px",
-          }}
-        />
-
-        <div style={sectionLabelStyle}>
-          System
-        </div>
-
-        {/* ====================================================
-            SETTINGS
-        ==================================================== */}
-
-        <Section
-          title="Settings"
-          icon="settings"
-          open={settingsOpen}
-          setOpen={setSettingsOpen}
-          routes={settingsRoutes}
-        >
-          <SubNav
-            to="/settings/profile"
-            title="Profile Settings"
-          />
-
-          <SubNav
-            to="/settings/company"
-            title="Company Settings"
-          />
-
-          <SubNav
-            to="/settings/users"
-            title="User Management"
-          />
-
-          <SubNav
-            to="/settings/notifications"
-            title="Notification Settings"
-          />
-
-          <SubNav
-            to="/settings/appearance"
-            title="Appearance"
-          />
-
-          <SubNav
-            to="/settings/security"
-            title="Security"
-          />
-
-          <SubNav
-            to="/settings/backup"
-            title="Backup & Restore"
-          />
-
-          <SubNav
-            to="/settings/integrations"
-            title="Integrations"
-          />
-
-          <SubNav
-            to="/settings/audit"
-            title="Audit Logs"
-          />
-
-          <SubNav
-            to="/settings/about"
-            title="About SmartChain Nexus"
-          />
-        </Section>
-      </div>
-
-      {/* ======================================================
-          USER PROFILE CARD
-      ====================================================== */}
-
-      <div
-        style={{
-          padding: "12px 15px 15px",
-          borderTop: "1px solid rgba(148,163,184,.10)",
-          background:
-            "linear-gradient(180deg, rgba(8,27,58,.25), rgba(5,18,42,.8))",
-        }}
-      >
-        <div
-          style={{
-            background: "rgba(15, 39, 76, 0.72)",
-            border: "1px solid rgba(96,165,250,.13)",
-            borderRadius: "12px",
-            padding: "11px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          {/* Avatar */}
-
-          <div
-            style={{
-              position: "relative",
-              width: "42px",
-              height: "42px",
-              borderRadius: "50%",
               background:
-                "linear-gradient(135deg, #2563EB, #7C3AED)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
-              fontSize: "14px",
-              flexShrink: 0,
-              boxShadow: "0 5px 14px rgba(37,99,235,.3)",
-            }}
-          >
-            BM
+                "rgba(2, 6, 23, 0.55)",
 
-            <span
+              backdropFilter:
+                "blur(2px)",
+
+              zIndex: 999,
+            }}
+          />
+        )}
+
+      {/* ======================================================
+          SIDEBAR
+      ====================================================== */}
+
+      <aside
+        style={sidebarStyle}
+      >
+        {/* ====================================================
+            BRAND
+        ==================================================== */}
+
+        <div
+          style={logoAreaStyle}
+        >
+          <div
+            style={logoBoxStyle}
+          >
+            <div
               style={{
-                position: "absolute",
-                right: "-1px",
-                bottom: "0px",
-                width: "9px",
-                height: "9px",
-                borderRadius: "50%",
-                background: "#10B981",
-                border: "2px solid #102B52",
+                width: "18px",
+                height: "18px",
+
+                border:
+                  "3px solid #FFFFFF",
+
+                borderRadius: "4px",
+
+                transform:
+                  "rotate(45deg)",
+
+                opacity: 0.95,
               }}
             />
           </div>
 
-          {/* User details */}
+          <div
+            style={{
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "block",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "17px",
+                fontWeight: 800,
+
+                letterSpacing:
+                  "-0.4px",
+
+                lineHeight: 1.1,
+
+                whiteSpace:
+                  "nowrap",
+              }}
+            >
+              SmartChain{" "}
+              <span
+                style={{
+                  color: "#3B82F6",
+                }}
+              >
+                Nexus
+              </span>
+            </div>
+
+            <div
+              style={{
+                color: "#64748B",
+
+                fontSize: "9px",
+
+                marginTop: "5px",
+
+                letterSpacing:
+                  "0.35px",
+
+                fontWeight: 600,
+
+                whiteSpace:
+                  "nowrap",
+              }}
+            >
+              SUPPLY CHAIN
+              INTELLIGENCE
+            </div>
+          </div>
+        </div>
+
+        {/* ====================================================
+            NAVIGATION
+        ==================================================== */}
+
+        <div
+          style={{
+            ...menuContainerStyle,
+
+            scrollbarWidth:
+              "thin",
+
+            scrollbarColor:
+              "#1E3A67 transparent",
+          }}
+        >
+          <div
+            style={
+              sectionLabelStyle
+            }
+          >
+            Main Navigation
+          </div>
+
+          <SimpleNav
+            to="/"
+            title="Dashboard"
+            icon="home"
+          />
+
+          {/* ==================================================
+              EXECUTIVE INTELLIGENCE
+          ================================================== */}
+
+          <Section
+            title="Executive Intelligence"
+            icon="executive"
+            open={executiveOpen}
+            setOpen={
+              setExecutiveOpen
+            }
+            routes={
+              executiveRoutes
+            }
+          >
+            <SubNav
+              to="/executive-dashboard"
+              title="CEO Dashboard"
+            />
+
+            <SubNav
+              to="/business-kpis"
+              title="Business KPIs"
+            />
+
+            <SubNav
+              to="/financial-overview"
+              title="Financial Overview"
+            />
+
+            <SubNav
+              to="/operational-performance"
+              title="Operational Performance"
+            />
+
+            <SubNav
+              to="/risk-monitoring"
+              title="Risk Monitoring"
+            />
+          </Section>
+
+          {/* ==================================================
+              PROCUREMENT
+          ================================================== */}
+
+          <Section
+            title="Procurement"
+            icon="procurement"
+            open={procurementOpen}
+            setOpen={
+              setProcurementOpen
+            }
+            routes={
+              procurementRoutes
+            }
+          >
+            <SubNav
+              to="/suppliers"
+              title="Supplier Management"
+            />
+
+            <SubNav
+              to="/purchase-orders"
+              title="Purchase Orders"
+            />
+
+            <SubNav
+              to="/spend-analytics"
+              title="Spend Analytics"
+            />
+
+            <SubNav
+              to="/vendor-performance"
+              title="Vendor Performance"
+            />
+
+            <SubNav
+              to="/lead-time-analysis"
+              title="Lead Time Analysis"
+            />
+          </Section>
+
+          {/* ==================================================
+              INVENTORY
+          ================================================== */}
+
+          <Section
+            title="Inventory"
+            icon="inventory"
+            open={inventoryOpen}
+            setOpen={
+              setInventoryOpen
+            }
+            routes={
+              inventoryRoutes
+            }
+          >
+            <SubNav
+              to="/inventory"
+              title="Stock Monitoring"
+            />
+
+            <SubNav
+              to="/inventory-transactions"
+              title="Inventory Transactions"
+            />
+
+            <SubNav
+              to="/inventory-adjustments"
+              title="Inventory Adjustments"
+            />
+
+            <SubNav
+              to="/abc-analysis"
+              title="ABC Analysis"
+            />
+
+            <SubNav
+              to="/xyz-analysis"
+              title="XYZ Analysis"
+            />
+
+            <SubNav
+              to="/eoq"
+              title="EOQ"
+            />
+
+            <SubNav
+              to="/safety-stock"
+              title="Safety Stock"
+            />
+
+            <SubNav
+              to="/reorder-point"
+              title="Reorder Point"
+            />
+
+            <SubNav
+              to="/inventory-turnover"
+              title="Inventory Turnover"
+            />
+          </Section>
+
+          {/* ==================================================
+              WAREHOUSE
+          ================================================== */}
+
+          <Section
+            title="Warehouse"
+            icon="warehouse"
+            open={warehouseOpen}
+            setOpen={
+              setWarehouseOpen
+            }
+            routes={
+              warehouseRoutes
+            }
+          >
+            <SubNav
+              to="/receiving"
+              title="Receiving"
+            />
+
+            <SubNav
+              to="/picking"
+              title="Picking"
+            />
+
+            <SubNav
+              to="/packing"
+              title="Packing"
+            />
+
+            <SubNav
+              to="/dispatch"
+              title="Dispatch"
+            />
+
+            <SubNav
+              to="/cycle-counts"
+              title="Cycle Counts"
+            />
+
+            <SubNav
+              to="/warehouse-performance"
+              title="Warehouse Performance"
+            />
+          </Section>
+
+          {/* ==================================================
+              LOGISTICS
+          ================================================== */}
+
+          <Section
+            title="Logistics"
+            icon="logistics"
+            open={logisticsOpen}
+            setOpen={
+              setLogisticsOpen
+            }
+            routes={
+              logisticsRoutes
+            }
+          >
+            <SubNav
+              to="/fleet-performance"
+              title="Fleet Performance"
+            />
+
+            <SubNav
+              to="/route-optimization"
+              title="Route Optimization"
+            />
+
+            <SubNav
+              to="/delivery-tracking"
+              title="Delivery Tracking"
+            />
+
+            <SubNav
+              to="/fuel-analysis"
+              title="Fuel Analysis"
+            />
+
+            <SubNav
+              to="/distribution-analytics"
+              title="Distribution Analytics"
+            />
+          </Section>
+
+          {/* ==================================================
+              SALES
+          ================================================== */}
+
+          <Section
+            title="Sales"
+            icon="sales"
+            open={salesOpen}
+            setOpen={
+              setSalesOpen
+            }
+            routes={salesRoutes}
+          >
+            <SubNav
+              to="/customers"
+              title="Customer Management"
+            />
+
+            <SubNav
+              to="/sales-orders"
+              title="Sales Orders"
+            />
+
+            <SubNav
+              to="/revenue-analysis"
+              title="Revenue Analysis"
+            />
+
+            <SubNav
+              to="/profit-margin"
+              title="Profit Margin"
+            />
+          </Section>
 
           <div
             style={{
-              flex: 1,
-              minWidth: 0,
+              height: "1px",
+
+              background:
+                "rgba(148,163,184,.08)",
+
+              margin: "14px 8px",
+
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "block",
             }}
+          />
+
+          <div
+            style={
+              sectionLabelStyle
+            }
           >
-            <div
-              style={{
-                color: "#FFFFFF",
-                fontSize: "12px",
-                fontWeight: 750,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              Blessing Mudarikwa
-            </div>
-
-            <div
-              style={{
-                color: "#94A3B8",
-                fontSize: "10px",
-                marginTop: "3px",
-              }}
-            >
-              Administrator
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                color: "#10B981",
-                fontSize: "10px",
-                marginTop: "3px",
-                fontWeight: 600,
-              }}
-            >
-              <span
-                style={{
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "50%",
-                  background: "#10B981",
-                }}
-              />
-
-              Online
-            </div>
+            Intelligence &
+            Analytics
           </div>
 
-          {/* Profile icon */}
+          {/* ==================================================
+              DATA SCIENCE
+          ================================================== */}
 
-          <NavLink
-            to="/settings/profile"
+          <Section
+            title="Data Science"
+            icon="data"
+            open={
+              dataScienceOpen
+            }
+            setOpen={
+              setDataScienceOpen
+            }
+            routes={
+              dataScienceRoutes
+            }
+          >
+            <SubNav
+              to="/demand-forecasting"
+              title="Demand Forecasting"
+            />
+
+            <SubNav
+              to="/sales-prediction"
+              title="Sales Prediction"
+            />
+
+            <SubNav
+              to="/supplier-risk-prediction"
+              title="Supplier Risk Prediction"
+            />
+
+            <SubNav
+              to="/customer-segmentation"
+              title="Customer Segmentation"
+            />
+
+            <SubNav
+              to="/inventory-optimization"
+              title="Inventory Optimization"
+            />
+
+            <SubNav
+              to="/anomaly-detection"
+              title="Anomaly Detection"
+            />
+          </Section>
+
+          {/* ==================================================
+              BUSINESS INTELLIGENCE
+          ================================================== */}
+
+          <Section
+            title="Business Intelligence"
+            icon="business"
+            open={
+              businessIntelOpen
+            }
+            setOpen={
+              setBusinessIntelOpen
+            }
+            routes={
+              businessIntelRoutes
+            }
+          >
+            <SubNav
+              to="/power-bi-dashboards"
+              title="Power BI Dashboards"
+            />
+
+            <SubNav
+              to="/executive-reporting"
+              title="Executive Reporting"
+            />
+
+            <SubNav
+              to="/operational-analytics"
+              title="Operational Analytics"
+            />
+
+            <SubNav
+              to="/interactive-kpi-monitoring"
+              title="Interactive KPI Monitoring"
+            />
+          </Section>
+
+          {/* ==================================================
+              ARTIFICIAL INTELLIGENCE
+          ================================================== */}
+
+          <Section
+            title="Artificial Intelligence"
+            icon="ai"
+            open={aiOpen}
+            setOpen={setAiOpen}
+            routes={aiRoutes}
+          >
+            <SubNav
+              to="/ai-supply-chain-assistant"
+              title="AI Supply Chain Assistant"
+            />
+
+            <SubNav
+              to="/predictive-analytics"
+              title="Predictive Analytics"
+            />
+
+            <SubNav
+              to="/intelligent-recommendations"
+              title="Intelligent Recommendations"
+            />
+
+            <SubNav
+              to="/natural-language-queries"
+              title="Natural Language Queries"
+            />
+          </Section>
+
+          <div
             style={{
-              width: "27px",
-              height: "27px",
+              height: "1px",
+
+              background:
+                "rgba(148,163,184,.08)",
+
+              margin: "14px 8px",
+
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "block",
+            }}
+          />
+
+          <div
+            style={
+              sectionLabelStyle
+            }
+          >
+            Process Excellence
+          </div>
+
+          {/* ==================================================
+              LEAN SIX SIGMA
+          ================================================== */}
+
+          <Section
+            title="Lean Six Sigma"
+            icon="lean"
+            open={leanOpen}
+            setOpen={setLeanOpen}
+            routes={leanRoutes}
+          >
+            <SubNav
+              to="/dmaic"
+              title="DMAIC"
+            />
+
+            <SubNav
+              to="/sipoc"
+              title="SIPOC"
+            />
+
+            <SubNav
+              to="/fishbone-analysis"
+              title="Fishbone Analysis"
+            />
+
+            <SubNav
+              to="/pareto-analysis"
+              title="Pareto Analysis"
+            />
+
+            <SubNav
+              to="/fmea"
+              title="FMEA"
+            />
+
+            <SubNav
+              to="/control-charts"
+              title="Control Charts"
+            />
+
+            <SubNav
+              to="/root-cause-analysis"
+              title="Root Cause Analysis"
+            />
+          </Section>
+
+          <div
+            style={{
+              height: "1px",
+
+              background:
+                "rgba(148,163,184,.08)",
+
+              margin: "14px 8px",
+
+              display:
+                collapsed &&
+                !isMobile
+                  ? "none"
+                  : "block",
+            }}
+          />
+
+          <div
+            style={
+              sectionLabelStyle
+            }
+          >
+            System
+          </div>
+
+          {/* ==================================================
+              SETTINGS
+          ================================================== */}
+
+          <Section
+            title="Settings"
+            icon="settings"
+            open={settingsOpen}
+            setOpen={
+              setSettingsOpen
+            }
+            routes={settingsRoutes}
+          >
+            <SubNav
+              to="/settings/profile"
+              title="Profile Settings"
+            />
+
+            <SubNav
+              to="/settings/company"
+              title="Company Settings"
+            />
+
+            <SubNav
+              to="/settings/users"
+              title="User Management"
+            />
+
+            <SubNav
+              to="/settings/notifications"
+              title="Notification Settings"
+            />
+
+            <SubNav
+              to="/settings/appearance"
+              title="Appearance"
+            />
+
+            <SubNav
+              to="/settings/security"
+              title="Security"
+            />
+
+            <SubNav
+              to="/settings/backup"
+              title="Backup & Restore"
+            />
+
+            <SubNav
+              to="/settings/integrations"
+              title="Integrations"
+            />
+
+            <SubNav
+              to="/settings/audit"
+              title="Audit Logs"
+            />
+
+            <SubNav
+              to="/settings/about"
+              title="About SmartChain Nexus"
+            />
+          </Section>
+        </div>
+
+        {/* ======================================================
+            USER PROFILE CARD
+        ====================================================== */}
+
+        <div
+          style={{
+            padding:
+              collapsed &&
+              !isMobile
+                ? "12px 8px 15px"
+                : "12px 15px 15px",
+
+            borderTop:
+              "1px solid rgba(148,163,184,.10)",
+
+            background:
+              "linear-gradient(180deg, rgba(8,27,58,.25), rgba(5,18,42,.8))",
+          }}
+        >
+          <div
+            style={{
+              background:
+                "rgba(15, 39, 76, 0.72)",
+
+              border:
+                "1px solid rgba(96,165,250,.13)",
+
+              borderRadius: "12px",
+
+              padding: "11px",
+
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              color: "#64748B",
-              borderRadius: "6px",
-              textDecoration: "none",
+
+              justifyContent:
+                collapsed &&
+                !isMobile
+                  ? "center"
+                  : "flex-start",
+
+              gap: "10px",
             }}
-            title="Profile Settings"
           >
-            <Icon type="chevron" size={15} />
-          </NavLink>
+            {/* Avatar */}
+
+            <div
+              style={{
+                position:
+                  "relative",
+
+                width: "42px",
+                height: "42px",
+
+                borderRadius: "50%",
+
+                background:
+                  "linear-gradient(135deg, #2563EB, #7C3AED)",
+
+                display: "flex",
+
+                alignItems: "center",
+                justifyContent:
+                  "center",
+
+                fontWeight: 800,
+
+                fontSize: "14px",
+
+                flexShrink: 0,
+
+                boxShadow:
+                  "0 5px 14px rgba(37,99,235,.3)",
+              }}
+            >
+              BM
+
+              <span
+                style={{
+                  position:
+                    "absolute",
+
+                  right: "-1px",
+
+                  bottom: "0px",
+
+                  width: "9px",
+                  height: "9px",
+
+                  borderRadius:
+                    "50%",
+
+                  background:
+                    "#10B981",
+
+                  border:
+                    "2px solid #102B52",
+                }}
+              />
+            </div>
+
+            {/* User details */}
+
+            <div
+              style={{
+                flex: 1,
+
+                minWidth: 0,
+
+                display:
+                  collapsed &&
+                  !isMobile
+                    ? "none"
+                    : "block",
+              }}
+            >
+              <div
+                style={{
+                  color: "#FFFFFF",
+
+                  fontSize: "12px",
+
+                  fontWeight: 750,
+
+                  whiteSpace:
+                    "nowrap",
+
+                  overflow:
+                    "hidden",
+
+                  textOverflow:
+                    "ellipsis",
+                }}
+              >
+                Blessing Mudarikwa
+              </div>
+
+              <div
+                style={{
+                  color:
+                    "#94A3B8",
+
+                  fontSize: "10px",
+
+                  marginTop: "3px",
+                }}
+              >
+                Administrator
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+
+                  alignItems:
+                    "center",
+
+                  gap: "5px",
+
+                  color:
+                    "#10B981",
+
+                  fontSize: "10px",
+
+                  marginTop: "3px",
+
+                  fontWeight: 600,
+                }}
+              >
+                <span
+                  style={{
+                    width: "6px",
+                    height: "6px",
+
+                    borderRadius:
+                      "50%",
+
+                    background:
+                      "#10B981",
+                  }}
+                />
+
+                Online
+              </div>
+            </div>
+
+            {/* Profile icon */}
+
+            <NavLink
+              to="/settings/profile"
+              onClick={
+                closeMobileSidebar
+              }
+              style={{
+                width: "27px",
+                height: "27px",
+
+                display:
+                  collapsed &&
+                  !isMobile
+                    ? "none"
+                    : "flex",
+
+                alignItems:
+                  "center",
+
+                justifyContent:
+                  "center",
+
+                color:
+                  "#64748B",
+
+                borderRadius:
+                  "6px",
+
+                textDecoration:
+                  "none",
+              }}
+              title="Profile Settings"
+            >
+              <Icon
+                type="chevron"
+                size={15}
+              />
+            </NavLink>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }

@@ -1,8 +1,10 @@
 import {
+  useEffect,
   useState,
   type CSSProperties,
   type KeyboardEvent,
 } from "react";
+
 import { theme } from "../../styles/theme";
 
 import {
@@ -19,6 +21,13 @@ import {
   purchaseOrderService,
   type PurchaseOrder,
 } from "../../services/purchaseOrderService";
+
+/* ==========================================================
+   SIDEBAR EVENT
+========================================================== */
+
+const SIDEBAR_TOGGLE_EVENT =
+  "smartchain:sidebar-toggle";
 
 /* ==========================================================
    TYPES
@@ -62,6 +71,9 @@ const Icon = ({
 
     close:
       "M6 6l12 12M18 6 6 18",
+
+    menu:
+      "M4 6h16M4 12h16M4 18h16",
   };
 
   return (
@@ -77,7 +89,10 @@ const Icon = ({
       aria-hidden="true"
     >
       <path
-        d={icons[type] ?? icons.search}
+        d={
+          icons[type] ??
+          icons.search
+        }
       />
     </svg>
   );
@@ -103,12 +118,64 @@ export default function Header() {
   const [searchCompleted, setSearchCompleted] =
     useState<boolean>(false);
 
+  const [isMobile, setIsMobile] =
+    useState<boolean>(false);
+
+  const [isTablet, setIsTablet] =
+    useState<boolean>(false);
+
+  /* ========================================================
+     RESPONSIVE SCREEN DETECTION
+  ======================================================== */
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(
+        window.innerWidth <= 768
+      );
+
+      setIsTablet(
+        window.innerWidth > 768 &&
+          window.innerWidth <= 1100
+      );
+    };
+
+    handleResize();
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () => {
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+    };
+  }, []);
+
+  /* ========================================================
+     SIDEBAR TOGGLE
+  ======================================================== */
+
+  function toggleSidebar(): void {
+    window.dispatchEvent(
+      new Event(
+        SIDEBAR_TOGGLE_EVENT
+      )
+    );
+  }
+
   /* ========================================================
      SEARCH
   ======================================================== */
 
   async function handleSearch(): Promise<void> {
-    const term = searchTerm.trim().toLowerCase();
+    const term =
+      searchTerm
+        .trim()
+        .toLowerCase();
 
     if (!term) {
       setSearchResults([]);
@@ -120,28 +187,33 @@ export default function Header() {
       setSearching(true);
       setSearchCompleted(false);
 
-      const results = await Promise.allSettled([
-        supplierService.getSuppliers(),
-        productService.getProducts(),
-        purchaseOrderService.getPurchaseOrders(),
-      ]);
+      const results =
+        await Promise.allSettled([
+          supplierService.getSuppliers(),
+          productService.getProducts(),
+          purchaseOrderService.getPurchaseOrders(),
+        ]);
 
       const suppliers: Supplier[] =
-        results[0].status === "fulfilled"
+        results[0].status ===
+        "fulfilled"
           ? results[0].value
           : [];
 
       const products: Product[] =
-        results[1].status === "fulfilled"
+        results[1].status ===
+        "fulfilled"
           ? results[1].value
           : [];
 
       const purchaseOrders: PurchaseOrder[] =
-        results[2].status === "fulfilled"
+        results[2].status ===
+        "fulfilled"
           ? results[2].value
           : [];
 
-      const searchResultsList: SearchResult[] = [];
+      const searchResultsList: SearchResult[] =
+        [];
 
       /* ======================================================
          SUPPLIERS
@@ -174,17 +246,20 @@ export default function Header() {
             supplier.country
               .toLowerCase()
               .includes(term) ||
-            (supplier.tax_number ?? "")
+            (supplier.tax_number ??
+              "")
               .toLowerCase()
               .includes(term) ||
-            (supplier.payment_terms ?? "")
+            (supplier.payment_terms ??
+              "")
               .toLowerCase()
               .includes(term);
 
           if (matches) {
             searchResultsList.push({
               type: "Supplier",
-              title: supplier.company_name,
+              title:
+                supplier.company_name,
               subtitle: `Supplier Code: ${supplier.supplier_code}`,
               path: "/suppliers",
             });
@@ -208,17 +283,22 @@ export default function Header() {
             product.category
               .toLowerCase()
               .includes(term) ||
-            String(product.unit_price)
+            String(
+              product.unit_price
+            )
               .toLowerCase()
               .includes(term) ||
-            String(product.quantity_in_stock)
+            String(
+              product.quantity_in_stock
+            )
               .toLowerCase()
               .includes(term);
 
           if (matches) {
             searchResultsList.push({
               type: "Product",
-              title: product.product_name,
+              title:
+                product.product_name,
               subtitle: `SKU: ${product.sku} • Category: ${product.category}`,
               path: "/products",
             });
@@ -242,7 +322,9 @@ export default function Header() {
             order.currency
               .toLowerCase()
               .includes(term) ||
-            String(order.supplier_id)
+            String(
+              order.supplier_id
+            )
               .toLowerCase()
               .includes(term) ||
             order.order_date
@@ -251,7 +333,9 @@ export default function Header() {
             order.expected_delivery
               .toLowerCase()
               .includes(term) ||
-            String(order.total_amount)
+            String(
+              order.total_amount
+            )
               .toLowerCase()
               .includes(term) ||
             (order.notes ?? "")
@@ -261,7 +345,8 @@ export default function Header() {
           if (matches) {
             searchResultsList.push({
               type: "Purchase Order",
-              title: order.po_number,
+              title:
+                order.po_number,
               subtitle: `Status: ${order.status} • Supplier ID: ${order.supplier_id}`,
               path: "/purchase-orders",
             });
@@ -269,7 +354,10 @@ export default function Header() {
         }
       );
 
-      setSearchResults(searchResultsList);
+      setSearchResults(
+        searchResultsList
+      );
+
       setSearchCompleted(true);
 
       console.log(
@@ -354,136 +442,318 @@ export default function Header() {
   ======================================================== */
 
   const headerStyle: CSSProperties = {
-    minHeight: "82px",
+    minHeight:
+      isMobile
+        ? "68px"
+        : "82px",
 
-    /* CHANGED: Navy blue replaced with charcoal/slate */
     background:
       "linear-gradient(90deg, #1E293B 0%, #334155 50%, #1E293B 100%)",
 
-    padding: "0 30px",
+    padding:
+      isMobile
+        ? "0 14px"
+        : isTablet
+        ? "0 18px"
+        : "0 30px",
+
     borderBottom:
       "1px solid rgba(148, 163, 184, 0.12)",
+
     display: "flex",
-    justifyContent: "space-between",
+
+    justifyContent:
+      "space-between",
+
     alignItems: "center",
-    boxSizing: "border-box",
+
+    boxSizing:
+      "border-box",
+
     boxShadow:
       "0 8px 24px rgba(15, 23, 42, 0.16)",
+
     position: "relative",
+
     zIndex: 100,
+  };
+
+  const menuButtonStyle: CSSProperties = {
+    width: "42px",
+    height: "42px",
+
+    display: "flex",
+
+    alignItems: "center",
+
+    justifyContent: "center",
+
+    color: "#CBD5E1",
+
+    background:
+      "rgba(37, 99, 235, 0.10)",
+
+    border:
+      "1px solid rgba(148, 163, 184, 0.12)",
+
+    borderRadius: "9px",
+
+    cursor: "pointer",
+
+    flexShrink: 0,
+
+    boxSizing:
+      "border-box",
   };
 
   const brandTitleStyle: CSSProperties = {
     margin: 0,
+
     color: "#FFFFFF",
-    fontSize: "20px",
+
+    fontSize:
+      isMobile
+        ? "16px"
+        : isTablet
+        ? "18px"
+        : "20px",
+
     fontWeight: 800,
-    letterSpacing: "-0.45px",
+
+    letterSpacing:
+      "-0.45px",
+
     lineHeight: 1.1,
+
+    whiteSpace:
+      "nowrap",
   };
 
   const brandSubtitleStyle: CSSProperties = {
     marginTop: "5px",
+
     color: "#94A3B8",
+
     fontSize: "10px",
+
     fontWeight: 600,
-    letterSpacing: "0.35px",
+
+    letterSpacing:
+      "0.35px",
+
+    display:
+      isMobile ||
+      isTablet
+        ? "none"
+        : "block",
   };
 
   const searchWrapperStyle: CSSProperties = {
     position: "relative",
+
     display: "flex",
+
     alignItems: "center",
+
     gap: "8px",
   };
 
   const searchInputStyle: CSSProperties = {
-    width: "310px",
+    width:
+      isMobile
+        ? "calc(100vw - 28px)"
+        : isTablet
+        ? "260px"
+        : "310px",
+
+    maxWidth:
+      isMobile
+        ? "calc(100vw - 28px)"
+        : undefined,
+
     height: "42px",
+
     padding: "0 14px",
+
     border:
       "1px solid rgba(148, 163, 184, 0.18)",
+
     borderRadius: "9px",
+
     outline: "none",
+
     fontSize: "14px",
+
     color: "#0F172A",
+
     background: "#FFFFFF",
-    boxSizing: "border-box",
+
+    boxSizing:
+      "border-box",
   };
 
   const searchButtonStyle: CSSProperties = {
+    width:
+      isMobile
+        ? "42px"
+        : undefined,
+
     height: "42px",
-    padding: "0 15px",
+
+    padding:
+      isMobile
+        ? "0"
+        : "0 15px",
+
     display: "flex",
-    alignItems: "center",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
     gap: "8px",
+
     background:
       "rgba(37, 99, 235, 0.14)",
+
     border:
       "1px solid rgba(59, 130, 246, 0.20)",
+
     borderRadius: "9px",
+
     cursor: "pointer",
+
     color: "#DBEAFE",
+
     fontSize: "14px",
+
     fontWeight: 650,
-    boxSizing: "border-box",
+
+    boxSizing:
+      "border-box",
+
+    flexShrink: 0,
   };
 
   const notificationStyle: CSSProperties = {
     width: "42px",
+
     height: "42px",
+
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+
+    alignItems:
+      "center",
+
+    justifyContent:
+      "center",
+
     color: "#CBD5E1",
+
     background:
       "rgba(37, 99, 235, 0.10)",
+
     border:
       "1px solid rgba(148, 163, 184, 0.12)",
+
     borderRadius: "9px",
+
     cursor: "pointer",
-    boxSizing: "border-box",
+
+    boxSizing:
+      "border-box",
+
+    flexShrink: 0,
   };
 
   const userContainerStyle: CSSProperties = {
     display: "flex",
-    alignItems: "center",
-    gap: "11px",
-    paddingLeft: "6px",
+
+    alignItems:
+      "center",
+
+    gap:
+      isMobile
+        ? "0"
+        : "11px",
+
+    paddingLeft:
+      isMobile
+        ? "0"
+        : "6px",
   };
 
   const avatarStyle: CSSProperties = {
-    position: "relative",
+    position:
+      "relative",
+
     width: "42px",
+
     height: "42px",
-    borderRadius: "50%",
+
+    borderRadius:
+      "50%",
+
     background:
       "linear-gradient(135deg, #2563EB, #7C3AED)",
+
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+
+    justifyContent:
+      "center",
+
+    alignItems:
+      "center",
+
     color: "#FFFFFF",
+
     fontWeight: 800,
+
     fontSize: "13px",
+
     flexShrink: 0,
+
     boxShadow:
       "0 5px 14px rgba(37, 99, 235, 0.30)",
   };
 
   const userNameStyle: CSSProperties = {
     color: "#FFFFFF",
+
     fontSize: "13px",
+
     fontWeight: 750,
-    whiteSpace: "nowrap",
+
+    whiteSpace:
+      "nowrap",
+
+    display:
+      isMobile ||
+      isTablet
+        ? "none"
+        : "block",
   };
 
   const onlineStyle: CSSProperties = {
-    display: "flex",
-    alignItems: "center",
+    display:
+      isMobile ||
+      isTablet
+        ? "none"
+        : "flex",
+
+    alignItems:
+      "center",
+
     gap: "5px",
+
     marginTop: "3px",
+
     color: "#10B981",
+
     fontSize: "10px",
+
     fontWeight: 600,
   };
 
@@ -492,25 +762,83 @@ export default function Header() {
   ======================================================== */
 
   return (
-    <header style={headerStyle}>
+    <header
+      style={headerStyle}
+    >
       {/* ====================================================
-          BRAND
+          LEFT SIDE
       ==================================================== */}
 
-      <div>
-        <h2 style={brandTitleStyle}>
-          SmartChain{" "}
-          <span
-            style={{
-              color: "#3B82F6",
-            }}
-          >
-            Nexus
-          </span>
-        </h2>
+      <div
+        style={{
+          display: "flex",
 
-        <div style={brandSubtitleStyle}>
-          ENTERPRISE SUPPLY CHAIN MANAGEMENT PLATFORM
+          alignItems:
+            "center",
+
+          gap:
+            isMobile
+              ? "10px"
+              : "14px",
+
+          minWidth: 0,
+        }}
+      >
+        {/* ==================================================
+            SIDEBAR TOGGLE
+        ================================================== */}
+
+        <button
+          type="button"
+          onClick={
+            toggleSidebar
+          }
+          style={
+            menuButtonStyle
+          }
+          title="Toggle navigation"
+          aria-label="Toggle navigation"
+        >
+          <Icon
+            type="menu"
+            size={20}
+          />
+        </button>
+
+        {/* ==================================================
+            BRAND
+        ================================================== */}
+
+        <div
+          style={{
+            minWidth: 0,
+          }}
+        >
+          <h2
+            style={
+              brandTitleStyle
+            }
+          >
+            SmartChain{" "}
+            <span
+              style={{
+                color:
+                  "#3B82F6",
+              }}
+            >
+              Nexus
+            </span>
+          </h2>
+
+          <div
+            style={
+              brandSubtitleStyle
+            }
+          >
+            ENTERPRISE SUPPLY
+            CHAIN MANAGEMENT
+            PLATFORM
+          </div>
         </div>
       </div>
 
@@ -521,43 +849,88 @@ export default function Header() {
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          gap: "14px",
+
+          alignItems:
+            "center",
+
+          gap:
+            isMobile
+              ? "7px"
+              : "14px",
         }}
       >
         {/* ==================================================
             SEARCH
         ================================================== */}
 
-        <div style={searchWrapperStyle}>
+        <div
+          style={
+            searchWrapperStyle
+          }
+        >
           {searchOpen && (
             <div
               style={{
-                position: "relative",
+                position:
+                  isMobile
+                    ? "fixed"
+                    : "relative",
+
+                top:
+                  isMobile
+                    ? "74px"
+                    : undefined,
+
+                left:
+                  isMobile
+                    ? "14px"
+                    : undefined,
+
+                right:
+                  isMobile
+                    ? "14px"
+                    : undefined,
+
+                zIndex:
+                  2000,
               }}
             >
               <input
                 autoFocus
                 type="text"
-                value={searchTerm}
+                value={
+                  searchTerm
+                }
                 onChange={(
                   event
                 ) => {
                   const value =
-                    event.target.value;
+                    event.target
+                      .value;
 
-                  setSearchTerm(value);
+                  setSearchTerm(
+                    value
+                  );
 
-                  if (!value.trim()) {
-                    setSearchResults([]);
-                    setSearchCompleted(false);
+                  if (
+                    !value.trim()
+                  ) {
+                    setSearchResults(
+                      []
+                    );
+
+                    setSearchCompleted(
+                      false
+                    );
                   }
                 }}
                 onKeyDown={
                   handleSearchKeyDown
                 }
                 placeholder="Search suppliers, products, POs..."
-                style={searchInputStyle}
+                style={
+                  searchInputStyle
+                }
               />
 
               {/* ==========================================
@@ -568,28 +941,60 @@ export default function Header() {
                 searchCompleted) && (
                 <div
                   style={{
-                    position: "absolute",
+                    position:
+                      "absolute",
+
                     top: "50px",
-                    right: 0,
-                    width: "390px",
-                    maxHeight: "420px",
-                    overflowY: "auto",
-                    background: "#FFFFFF",
+
+                    right:
+                      isMobile
+                        ? 0
+                        : 0,
+
+                    width:
+                      isMobile
+                        ? "100%"
+                        : "390px",
+
+                    maxWidth:
+                      "calc(100vw - 28px)",
+
+                    maxHeight:
+                      "420px",
+
+                    overflowY:
+                      "auto",
+
+                    background:
+                      "#FFFFFF",
+
                     border:
                       "1px solid #E2E8F0",
-                    borderRadius: "12px",
+
+                    borderRadius:
+                      "12px",
+
                     boxShadow:
                       "0 16px 40px rgba(15,23,42,.22)",
-                    zIndex: 1000,
+
+                    zIndex:
+                      1000,
                   }}
                 >
                   {searching ? (
                     <div
                       style={{
-                        padding: "22px",
-                        textAlign: "center",
-                        color: "#64748B",
-                        fontSize: "13px",
+                        padding:
+                          "22px",
+
+                        textAlign:
+                          "center",
+
+                        color:
+                          "#64748B",
+
+                        fontSize:
+                          "13px",
                       }}
                     >
                       Searching...
@@ -598,13 +1003,21 @@ export default function Header() {
                     0 ? (
                     <div
                       style={{
-                        padding: "22px",
-                        textAlign: "center",
-                        color: "#64748B",
-                        fontSize: "13px",
+                        padding:
+                          "22px",
+
+                        textAlign:
+                          "center",
+
+                        color:
+                          "#64748B",
+
+                        fontSize:
+                          "13px",
                       }}
                     >
-                      No results found.
+                      No results
+                      found.
                     </div>
                   ) : (
                     <div>
@@ -612,14 +1025,23 @@ export default function Header() {
                         style={{
                           padding:
                             "13px 16px",
+
                           borderBottom:
                             "1px solid #E2E8F0",
-                          fontSize: "13px",
-                          fontWeight: 750,
-                          color: "#475569",
+
+                          fontSize:
+                            "13px",
+
+                          fontWeight:
+                            750,
+
+                          color:
+                            "#475569",
                         }}
                       >
-                        {searchResults.length}{" "}
+                        {
+                          searchResults.length
+                        }{" "}
                         result
                         {searchResults.length !==
                         1
@@ -642,16 +1064,24 @@ export default function Header() {
                               )
                             }
                             style={{
-                              width: "100%",
-                              border: "none",
+                              width:
+                                "100%",
+
+                              border:
+                                "none",
+
                               background:
                                 "#FFFFFF",
+
                               padding:
                                 "14px 16px",
+
                               textAlign:
                                 "left",
+
                               cursor:
                                 "pointer",
+
                               borderBottom:
                                 "1px solid #F1F5F9",
                             }}
@@ -672,17 +1102,22 @@ export default function Header() {
                               style={{
                                 display:
                                   "flex",
+
                                 justifyContent:
                                   "space-between",
+
                                 alignItems:
                                   "center",
-                                gap: "10px",
+
+                                gap:
+                                  "10px",
                               }}
                             >
                               <strong
                                 style={{
                                   color:
                                     "#0F172A",
+
                                   fontSize:
                                     "14px",
                                 }}
@@ -696,16 +1131,22 @@ export default function Header() {
                                 style={{
                                   fontSize:
                                     "11px",
+
                                   fontWeight:
                                     700,
+
                                   color:
                                     "#2563EB",
+
                                   background:
                                     "#EFF6FF",
+
                                   padding:
                                     "4px 7px",
+
                                   borderRadius:
                                     "5px",
+
                                   whiteSpace:
                                     "nowrap",
                                 }}
@@ -720,8 +1161,10 @@ export default function Header() {
                               style={{
                                 marginTop:
                                   "5px",
+
                                 color:
                                   "#64748B",
+
                                 fontSize:
                                   "12px",
                               }}
@@ -745,23 +1188,26 @@ export default function Header() {
             onClick={
               handleSearchButtonClick
             }
-            style={searchButtonStyle}
+            style={
+              searchButtonStyle
+            }
             title={
               searchOpen
                 ? "Run search"
                 : "Open search"
             }
+            aria-label="Search"
           >
             <Icon
               type="search"
               size={17}
             />
 
-            <span>
-              {searchOpen
-                ? "Search"
-                : "Search"}
-            </span>
+            {!isMobile && (
+              <span>
+                Search
+              </span>
+            )}
           </button>
         </div>
 
@@ -776,8 +1222,11 @@ export default function Header() {
               "Notifications clicked"
             );
           }}
-          style={notificationStyle}
+          style={
+            notificationStyle
+          }
           title="Notifications"
+          aria-label="Notifications"
         >
           <Icon
             type="bell"
@@ -789,21 +1238,35 @@ export default function Header() {
             USER
         ================================================== */}
 
-        <div style={userContainerStyle}>
-          <div style={avatarStyle}>
+        <div
+          style={
+            userContainerStyle
+          }
+        >
+          <div
+            style={avatarStyle}
+          >
             BM
 
             <span
               style={{
-                position: "absolute",
-                right: "-1px",
-                bottom: "0px",
-                width: "9px",
-                height: "9px",
-                borderRadius: "50%",
-                background: "#10B981",
+                position:
+                  "absolute",
 
-                /* CHANGED: matches the new charcoal header */
+                right: "-1px",
+
+                bottom: "0px",
+
+                width: "9px",
+
+                height: "9px",
+
+                borderRadius:
+                  "50%",
+
+                background:
+                  "#10B981",
+
                 border:
                   "2px solid #334155",
               }}
@@ -811,17 +1274,29 @@ export default function Header() {
           </div>
 
           <div>
-            <div style={userNameStyle}>
+            <div
+              style={
+                userNameStyle
+              }
+            >
               Blessing Mudarikwa
             </div>
 
-            <div style={onlineStyle}>
+            <div
+              style={
+                onlineStyle
+              }
+            >
               <span
                 style={{
                   width: "6px",
                   height: "6px",
-                  borderRadius: "50%",
-                  background: "#10B981",
+
+                  borderRadius:
+                    "50%",
+
+                  background:
+                    "#10B981",
                 }}
               />
 
@@ -829,20 +1304,33 @@ export default function Header() {
             </div>
           </div>
 
-          <div
-            style={{
-              color: "#94A3B8",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: "2px",
-            }}
-          >
-            <Icon
-              type="chevron"
-              size={16}
-            />
-          </div>
+          {!isMobile && (
+            <div
+              style={{
+                color:
+                  "#94A3B8",
+
+                display:
+                  isTablet
+                    ? "none"
+                    : "flex",
+
+                alignItems:
+                  "center",
+
+                justifyContent:
+                  "center",
+
+                marginLeft:
+                  "2px",
+              }}
+            >
+              <Icon
+                type="chevron"
+                size={16}
+              />
+            </div>
+          )}
         </div>
       </div>
     </header>
